@@ -1,6 +1,6 @@
 import React from 'react';
-import { Grid, Typography, Paper, TextField, FormControl } from '@mui/material';
-import { makeStyles } from '@mui/styles';
+import { Grid, Typography, TextField } from '@mui/material';
+import { useNavigate } from 'react-router-dom';
 import { useState } from 'react';
 import Button from '@mui/material/Button';
 
@@ -10,6 +10,7 @@ import Button from '@mui/material/Button';
 
 
 const Login = () =>{
+    const navigate= useNavigate();
 
     const [login, setLogin] = useState({username: "", password: ""})
 
@@ -66,7 +67,7 @@ return(
            <TextField onChange={handleChange} value={login.password} sx={{backgroundColor: '#fefefe', marginBottom: '16px', borderRadius: "5px"}}  size='small'   fullWidth type="password" id="password" label="password" variant="filled" />
      
      
-       <Button type="submit" margin='dense' variant= "contained" color="secondary" fullWidth>log-in</Button>
+       <Button onClick={()=>{ navigate("/home/transaction")}} type="submit" margin='dense' variant= "contained" color="secondary" fullWidth>log-in</Button>
 
    </form>
 
