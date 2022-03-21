@@ -13,17 +13,13 @@ import * as React from "react";
 import { useNavigate } from "react-router-dom";
 import Logo from "./Logo";
 
-const NavBar = React.forwardRef((props, ref) => {
+const NavBar = (props) => {
   const navigate = useNavigate();
   const theme = useTheme();
   const primarylight = theme.palette.primary.light;
 
-  function handleNavigation() {
-    navigate("/");
-  }
-
   return (
-    <AppBar elevation={3} ref={ref}>
+    <AppBar elevation={3}>
       <Container maxWidth="xl">
         <Toolbar>
           <Logo />
@@ -32,7 +28,9 @@ const NavBar = React.forwardRef((props, ref) => {
           <Button
             color="error"
             name="test"
-            onClick={handleNavigation}
+            onClick={() => {
+              navigate("/");
+            }}
             variant="contained"
             disableElevation
           >
@@ -42,6 +40,6 @@ const NavBar = React.forwardRef((props, ref) => {
       </Container>
     </AppBar>
   );
-});
+};
 
 export default NavBar;
