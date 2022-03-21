@@ -1,21 +1,27 @@
-import Login from "./pages/Login"
-import { Routes, Route } from 'react-router-dom';
-import ProfitGoal from "./pages/ProfitGoal";
-import Reports from "./pages/Reports";
-import Transaction from "./pages/Transactions";
-import Nav from "./pages/Nav";
-function App() {
+import { Routes, Route, BrowserRouter } from "react-router-dom";
+import TransactionPage from "./pages/Transactions";
+import { CssBaseline } from "@mui/material";
+import Reports from "./pages/D-Reports";
+import ReportsPage from "./pages/ReportsPage";
+import ProfitGoalPage from "./pages/ProfitePage";
+import SettingsPage from "./pages/SettingsPage";
+import Login from "./pages/Login";
+import NotFound from "./pages/NotFound";
+
+const App = (props) => {
   return (
-    <Routes>
-        <Route path="*" element={<Login/>} />
-        <Route path="/home" element={<Nav/>}>
-        <Route path="/home/reports" element={<Reports/>} />
-        <Route path="/home/transaction" element={<Transaction/>} />
-        <Route path="/home/profitgoal" element={<ProfitGoal/>} /> 
-          </Route>
-       
-    </Routes>
+    <BrowserRouter>
+      <CssBaseline />
+      <Routes>
+        <Route path="/login" element={<Login />} />
+        <Route path="/transactions" element={<TransactionPage />} />
+        <Route path="/reports" element={<ReportsPage />} />
+        <Route path="/profit-goal" element={<ProfitGoalPage />} />
+        <Route path="/settings" element={<SettingsPage />} />
+        <Route path="*" element={<NotFound />} />
+      </Routes>
+    </BrowserRouter>
   );
-}
+};
 
 export default App;
