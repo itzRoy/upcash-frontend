@@ -13,7 +13,7 @@ const App = (props) => {
     <BrowserRouter>
       <CssBaseline />
       <Routes>
-        <Route path="/login" element={<Login />} />
+        <Route path="/" element={<Login />} />
         <Route path="/transactions" element={<TransactionPage />} />
         <Route path="/reports" element={<ReportsPage />} />
         <Route path="/profit-goal" element={<ProfitGoalPage />} />

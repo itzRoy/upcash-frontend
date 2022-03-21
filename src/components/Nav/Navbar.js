@@ -29,7 +29,7 @@ const NavBar = (props) => {
             color="error"
             name="test"
             onClick={() => {
-              navigate("/login");
+              navigate("/");
             }}
             variant="contained"
             disableElevation

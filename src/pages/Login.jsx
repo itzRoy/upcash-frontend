@@ -1,122 +1,108 @@
-import React from "react";
-import { Grid, Typography, TextField } from "@mui/material";
-import { useNavigate } from "react-router-dom";
-import { useState } from "react";
-import Button from "@mui/material/Button";
+import React from 'react';
+import { Grid, Typography, TextField, Container } from '@mui/material';
+import { useNavigate } from 'react-router-dom';
+import { useState } from 'react';
+import Button from '@mui/material/Button';
 
-const Login = () => {
-  const navigate = useNavigate();
 
-  const [login, setLogin] = useState({ username: "", password: "" });
 
-  const handleSubmit = (e) => {
-    e.preventDefault();
+    const Login = () => {
+        const navigate = useNavigate();
 
-    console.log(login);
-    setLogin({ username: "", password: "" });
-  };
+        const [login, setLogin] = useState({ username: "", password: "" })
+        const [errorMsg, setErrorMsg] = useState('');
+        const [errorUsername, setErrorUsername] = useState("");
+        const [errorPass, setErrorPass] = useState("");
 
-  const handleChange = (e) => {
-    e.preventDefault();
-    const value = e.target.value;
-    const name = e.target.id;
-    setLogin({ ...login, [name]: value });
-    console.log(login);
-  };
 
-  return (
-    <Grid
-      container
-      spacing={0}
-      direction="column"
-      alignItems="center"
-      justifyContent="center"
-      color="primary.main"
-      minHeight={"100vh"}
-      backgroundColor="primary.main"
-    >
-      <Grid color="primary" container style={{ color: "#fefefe" }}>
-        <Grid item xs={1} />
-        <Grid item xs={12} md={3}>
-          <Typography
-            variant="h4"
-            fontWeight={100}
-            gutterBottom
-            marginLeft={"-1vw"}
-            component="h3"
-          >
-            Welcome to
-          </Typography>
-          <Typography
-            variant="h1"
-            marginLeft={"7vw"}
-            fontWeight={400}
-            component="h1"
-          >
-            up
-            <Typography color="secondary" display="inline" variant="h1">
-              CASH
-            </Typography>
-          </Typography>
-        </Grid>
-        <Grid item xs={2} />
 
-        <Grid
-          item
-          xs={12}
-          md={5}
-          borderRadius={3}
-          backgroundColor="primary.light"
-          padding={3}
-        >
-          <form onSubmit={handleSubmit}>
-            <TextField
-              onChange={handleChange}
-              value={login.username}
-              sx={{ backgroundColor: "#fefefe", borderRadius: "5px" }}
-              size="small"
-              margin="dense"
-              fullWidth
-              type="text"
-              id="username"
-              label="username"
-              variant="filled"
-            />
 
-            <TextField
-              onChange={handleChange}
-              value={login.password}
-              sx={{
-                backgroundColor: "#fefefe",
-                marginBottom: "16px",
-                borderRadius: "5px",
-              }}
-              size="small"
-              fullWidth
-              type="password"
-              id="password"
-              label="password"
-              variant="filled"
-            />
+        /////////////////////////////handle submit
+        const handleSubmit = async (e) => {
+            e.preventDefault();
+            if (!login.username) {
+                setErrorUsername("username required");
+                return setTimeout(() => setErrorUsername(""), 5000)
 
-            <Button
-              onClick={() => {
-                navigate("/transactions");
-              }}
-              type="submit"
-              margin="dense"
-              variant="contained"
-              color="secondary"
-              fullWidth
-            >
-              log-in
-            </Button>
-          </form>
-        </Grid>
-        <Grid item xs={1} />
-      </Grid>
-    </Grid>
-  );
-};
 
-export default Login;
+            }
+
+            else if (!login.password) {
+                setErrorPass("password required");
+                return setTimeout(() => setErrorPass(""), 5000)
+
+
+            }
+
+            // let data = {};
+            // axios.get('http://localhost:8000/api/admin/' + login.username)
+            //     .then(res => data = res.data)
+            //     .catch(err => setErrorMsg(err));
+
+            // if (!data || data.password !== login.password) {
+            //     setErrorMsg("username or password is incorrect");
+            //     setTimeout(() => setErrorMsg(""), 5000);
+            //     return
+            // }
+            navigate("/transactions")
+            setLogin({ username: "", password: "" })
+        }
+
+
+
+        const handleChange = (e) => {
+            e.preventDefault();
+            const value = e.target.value;
+            const name = e.target.id;
+            setLogin({ ...login, [name]: value })
+            console.log(login);
+        }
+
+
+        return (
+            <Container sx={{ display: 'flex', alignItems: 'center', justifyContent: 'center', height: '100vh' }} maxWidth={'xl'}>
+
+
+
+                <Grid
+                    spacing={2}
+                    color="primary"
+                    container
+                    style={{ color: "#fefefe" }}
+                >
+                    <Grid item xl={6} md={6} xs={12} align={'center'} textAlign={'left'}>
+                        <Typography variant="h4" fontWeight={100} align={'inherit'} >
+                            Welcome to
+                        </Typography>
+                        <Typography variant="h1" fontWeight={400} component='div' align={'center'}>
+                            up<Typography color="secondary" display="inline" variant="h1" component='h3'>CASH</Typography>
+                        </Typography>
+                    </Grid>
+
+                    <Grid item xl={6} md={6} xs={12} borderRadius={3} backgroundColor="primary.light"  >
+
+                        <form sx={'#463B60'} onSubmit={handleSubmit}>
+                            {errorUsername && <Typography variant='caption' color='error'>{errorUsername}</Typography>}
+                            <TextField onChange={handleChange} value={login.username} sx={{ backgroundColor: '#fefefe', borderRadius: "5px" }} size='small' margin='dense' fullWidth type="text" id="username" label="username" variant="filled" />
+                            {errorPass && <Typography variant='caption' color='error'>{errorPass}</Typography>}
+
+                            <TextField onChange={handleChange} value={login.password} sx={{ backgroundColor: '#fefefe', marginBottom: '16px', borderRadius: "5px" }} size='small' fullWidth type="password" id="password" label="password" variant="filled" />
+
+
+                            <Button type="submit" margin='dense' variant="contained" color="secondary" fullWidth>log-in</Button>
+
+                        </form>
+
+
+
+                    </Grid>
+
+
+                </Grid>
+
+            </Container>
+        )
+
+    }
+
+    export default Login
