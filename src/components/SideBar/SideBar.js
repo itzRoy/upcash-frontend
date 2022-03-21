@@ -14,6 +14,7 @@ import SettingsIcon from "@mui/icons-material/Settings";
 import { Box } from "@mui/system";
 import { purple } from "@mui/material/colors";
 import React from "react";
+import { useNavigate } from "react-router-dom";
 
 const SX = {
   Box: {
@@ -23,8 +24,9 @@ const SX = {
     display: "flex",
     flexDirection: "column",
     alignItems: "center",
-    pt: "200px",
+    pt: "20px",
     gap: "10px",
+    mt: "74px",
   },
   settingsButton: {
     mt: "auto",
@@ -35,9 +37,18 @@ const SX = {
 };
 
 const SideBar = (props) => {
+  //==========================
+  const navigate = useNavigate();
+  const handelNavigation = (e) => {
+    const routeName = e.target.name;
+    navigate(`/${routeName}`);
+  };
+
   return (
-    <Box sx={SX.Box}>
+    <Box sx={SX.Box} style={{ height: "calc(100vh - 84px)" }}>
       <Button
+        onClick={handelNavigation}
+        name="transactions"
         variant={"contained"}
         color={"secondary"}
         fullWidth
@@ -47,6 +58,8 @@ const SideBar = (props) => {
         Transaction
       </Button>
       <Button
+        onClick={handelNavigation}
+        name="reports"
         variant={"contained"}
         style={SX.btnRds}
         fullWidth
@@ -55,6 +68,8 @@ const SideBar = (props) => {
         Reports
       </Button>
       <Button
+        onClick={handelNavigation}
+        name="profit-goal"
         variant={"contained"}
         style={SX.btnRds}
         fullWidth
@@ -62,9 +77,14 @@ const SideBar = (props) => {
       >
         Profit Goal
       </Button>
-
       {/*====settings buttons====*/}
-      <Button fullWidth style={SX.btnRds} sx={SX.settingsButton}>
+      <Button
+        onClick={handelNavigation}
+        name="settings"
+        fullWidth
+        style={SX.btnRds}
+        sx={SX.settingsButton}
+      >
         <Box>
           <SettingsIcon color={"white"} />
           <Typography color={"white"}>Settings</Typography>

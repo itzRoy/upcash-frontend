@@ -13,7 +13,7 @@ import * as React from "react";
 import { useNavigate } from "react-router-dom";
 import Logo from "./Logo";
 
-const NavBar = React.forwardRef((props, ref) => {
+const NavBar = (props) => {
   const navigate = useNavigate();
   const theme = useTheme();
   const primarylight = theme.palette.primary.light;
@@ -23,7 +23,7 @@ const NavBar = React.forwardRef((props, ref) => {
   }
 
   return (
-    <AppBar elevation={3} ref={ref}>
+    <AppBar elevation={3}>
       <Container maxWidth="xl">
         <Toolbar>
           <Logo />
@@ -42,6 +42,6 @@ const NavBar = React.forwardRef((props, ref) => {
       </Container>
     </AppBar>
   );
-});
+};
 
 export default NavBar;

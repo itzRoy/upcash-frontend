@@ -1,31 +1,27 @@
-import Login from "./pages/Login";
 import { Routes, Route, BrowserRouter } from "react-router-dom";
-import ProfitGoal from "./pages/ProfitGoal";
-import Reports from "./pages/Reports";
-import Transaction from "./pages/Transactions";
-import Nav from "./components/Nav";
-import Navbar from "./components/Nav/Navbar";
-import SideBar from "./components/SideBar/SideBar";
-import TransactionPage from "./pages/test";
+import TransactionPage from "./pages/Transactions";
 import { CssBaseline } from "@mui/material";
+import Reports from "./pages/D-Reports";
+import ReportsPage from "./pages/ReportsPage";
+import ProfitGoalPage from "./pages/ProfitePage";
+import SettingsPage from "./pages/SettingsPage";
+import Login from "./pages/Login";
+import NotFound from "./pages/NotFound";
 
-function App() {
+const App = (props) => {
   return (
     <BrowserRouter>
       <CssBaseline />
       <Routes>
-        <Route path="/" element={<TransactionPage />} />
+        <Route path="/login" element={<Login />} />
+        <Route path="/transactions" element={<TransactionPage />} />
+        <Route path="/reports" element={<ReportsPage />} />
+        <Route path="/profit-goal" element={<ProfitGoalPage />} />
+        <Route path="/settings" element={<SettingsPage />} />
+        <Route path="*" element={<NotFound />} />
       </Routes>
     </BrowserRouter>
-    // <Routes>
-    //   <Route path="*" element={<Login />} />
-    //   <Route path="/home" element={<Nav />}>
-    //     <Route path="/home/reports" element={<Reports />} />
-    //     <Route path="/home/transaction" element={<Transaction />} />
-    //     <Route path="/home/profitgoal" element={<ProfitGoal />} />
-    //   </Route>
-    // </Routes>
   );
-}
+};
 
 export default App;
