@@ -18,10 +18,6 @@ const NavBar = (props) => {
   const theme = useTheme();
   const primarylight = theme.palette.primary.light;
 
-  function handleNavigation() {
-    navigate("/");
-  }
-
   return (
     <AppBar elevation={3}>
       <Container maxWidth="xl">
@@ -32,7 +28,9 @@ const NavBar = (props) => {
           <Button
             color="error"
             name="test"
-            onClick={handleNavigation}
+            onClick={() => {
+              navigate("/login");
+            }}
             variant="contained"
             disableElevation
           >

@@ -28,7 +28,7 @@ const ProfitGoalPage = (props) => {
               style={{ height: "calc(100vh - 84px)" }}
               sx={{ padding: "20px" }}
             >
-              <Typography sx={{ bgcolor: "white" }}>Reports</Typography>
+              <Typography sx={{ bgcolor: "white" }}>Profit-goal</Typography>
             </Paper>
           </main>
         </Grid>

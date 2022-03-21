@@ -14,7 +14,7 @@ import SettingsIcon from "@mui/icons-material/Settings";
 import { Box } from "@mui/system";
 import { purple } from "@mui/material/colors";
 import React from "react";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useLocation } from "react-router-dom";
 
 const SX = {
   Box: {
@@ -39,18 +39,17 @@ const SX = {
 const SideBar = (props) => {
   //==========================
   const navigate = useNavigate();
-  const handelNavigation = (e) => {
-    const routeName = e.target.name;
-    navigate(`/${routeName}`);
+  const url = useLocation().pathname;
+  const handelNavigation = (route) => {
+    navigate(`/${route}`);
   };
 
   return (
     <Box sx={SX.Box} style={{ height: "calc(100vh - 84px)" }}>
       <Button
-        onClick={handelNavigation}
-        name="transactions"
+        onClick={() => handelNavigation("transactions")}
         variant={"contained"}
-        color={"secondary"}
+        color={url === "/transactions" ? "secondary" : "primary"}
         fullWidth
         disableElevation
         style={SX.btnRds}
@@ -58,9 +57,9 @@ const SideBar = (props) => {
         Transaction
       </Button>
       <Button
-        onClick={handelNavigation}
-        name="reports"
+        onClick={() => handelNavigation("reports")}
         variant={"contained"}
+        color={url === "/reports" ? "secondary" : "primary"}
         style={SX.btnRds}
         fullWidth
         disableElevation
@@ -68,9 +67,9 @@ const SideBar = (props) => {
         Reports
       </Button>
       <Button
-        onClick={handelNavigation}
-        name="profit-goal"
+        onClick={() => handelNavigation("profit-goal")}
         variant={"contained"}
+        color={url === "/profit-goal" ? "secondary" : "primary"}
         style={SX.btnRds}
         fullWidth
         disableElevation
@@ -79,8 +78,7 @@ const SideBar = (props) => {
       </Button>
       {/*====settings buttons====*/}
       <Button
-        onClick={handelNavigation}
-        name="settings"
+        onClick={() => handelNavigation("settings")}
         fullWidth
         style={SX.btnRds}
         sx={SX.settingsButton}
