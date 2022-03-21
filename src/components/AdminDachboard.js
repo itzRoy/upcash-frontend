@@ -74,21 +74,20 @@ const AdminDachboard = (props) => {
         <div>
             <Container maxWidth="xl">
 
-                <Stack direction="row" spacing={2} justifyContent="center">
+                <Stack direction="row" spacing={2} justifyContent="center" >
                     <TextField id="outlined-basic" type='text' name='username' onChange={handlechange} label="username" variant="outlined" />
                     <TextField id="outlined-basic" type='text' name='password' onChange={handlechange} label="password" variant="outlined" />
                     <Button type='button' onClick={handleAdd} variant="contained" disableElevation>ADD</Button>
-
                 </Stack>
 
-                <Table aria-label="simple table">
-                    <TableHead>
+                <Table aria-label="simple table" >
+                    <TableHead >
                         <TableRow>
                             <Grid container spacing={2} >
                                 <Grid item xs={3}>
                                     <TableCell >ID</TableCell>
                                 </Grid>
-                                <Grid item xs={3}>
+                                <Grid item xs={3} >
                                     <TableCell >Username</TableCell>
                                 </Grid>
                                 <Grid item xs={3}>

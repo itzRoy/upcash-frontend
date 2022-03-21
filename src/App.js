@@ -4,6 +4,8 @@ import ProfitGoal from "./pages/ProfitGoal";
 import Reports from "./pages/Reports";
 import Transaction from "./pages/Transactions";
 import Nav from "./components/Nav";
+import AdminDachboard from "./components/AdminDachboard";
+import CatDachboard from "./components/CategoryDachboard";
 
 function App() {
   return (
