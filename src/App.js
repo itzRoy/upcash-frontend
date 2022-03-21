@@ -1,5 +1,5 @@
 import Login from "./pages/Login";
-import { Routes, Route } from "react-router-dom";
+import { Routes, Route, BrowserRouter } from "react-router-dom";
 import ProfitGoal from "./pages/ProfitGoal";
 import Reports from "./pages/Reports";
 import Transaction from "./pages/Transactions";
@@ -11,10 +11,12 @@ import { CssBaseline } from "@mui/material";
 
 function App() {
   return (
-    <>
+    <BrowserRouter>
       <CssBaseline />
-      <TransactionPage />
-    </>
+      <Routes>
+        <Route path="/" element={<TransactionPage />} />
+      </Routes>
+    </BrowserRouter>
     // <Routes>
     //   <Route path="*" element={<Login />} />
     //   <Route path="/home" element={<Nav />}>
