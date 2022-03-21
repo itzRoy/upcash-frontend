@@ -1,10 +1,10 @@
-// import Login from "./pages/Login"
-// import { Routes, Route } from 'react-router-dom';
-// import ProfitGoal from "./pages/ProfitGoal";
-// import Reports from "./pages/Reports";
-// import Transaction from "./pages/Transactions";
-// import Nav from "./components/Nav";
-import AdminDachboard from "./components/AdminDachboard";
+import Login from "./pages/Login"
+import { Routes, Route } from 'react-router-dom';
+import ProfitGoal from "./pages/ProfitGoal";
+import Reports from "./pages/Reports";
+import Transaction from "./pages/Transactions";
+import Nav from "./components/Nav";
+
 function App() {
   return (
     <Routes>
