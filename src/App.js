@@ -1,5 +1,5 @@
 import { Routes, Route, BrowserRouter } from "react-router-dom";
-import TransactionPage from "./pages/Transactions";
+import TransactionPage from "./pages/TransactionsPage";
 import { CssBaseline } from "@mui/material";
 import Reports from "./pages/D-Reports";
 import ReportsPage from "./pages/ReportsPage";

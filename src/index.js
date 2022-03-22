@@ -1,4 +1,5 @@
 import React from "react";
+import "./index.css";
 import ReactDOM from "react-dom";
 import { BrowserRouter } from "react-router-dom";
 import App from "./App";
@@ -11,7 +12,7 @@ const theme = createTheme({
     // mode: "dark",
     background: {
       default: "#463B60",
-      // paper: "#31254D",
+      // paper: "#E2E2E2",
     },
 
     primary: {
