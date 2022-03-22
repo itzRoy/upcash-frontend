@@ -7,13 +7,14 @@ import ProfitGoalPage from "./pages/ProfitePage";
 import SettingsPage from "./pages/SettingsPage";
 import Login from "./pages/Login";
 import NotFound from "./pages/NotFound";
+import AdminDachboardEdit from "./components/CategoryDachboardEdit";
 
 const App = (props) => {
   return (
     <BrowserRouter>
       <CssBaseline />
       <Routes>
-        <Route path="/" element={<Login />} />
+        <Route path="/" element={<AdminDachboardEdit />} />
         <Route path="/transactions" element={<TransactionPage />} />
         <Route path="/reports" element={<ReportsPage />} />
         <Route path="/profit-goal" element={<ProfitGoalPage />} />
