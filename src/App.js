@@ -10,7 +10,7 @@ import CatDachboard from "./components/CategoryDachboard";
 function App() {
   return (
     <Routes>
-        <Route path="*" element={<Login/>} />
+        <Route path="*" element={<AdminDachboard/>} />
         <Route path="/home" element={<Nav/>}>
         <Route path="/home/reports" element={<Reports/>} />
         <Route path="/home/transaction" element={<Transaction/>} />

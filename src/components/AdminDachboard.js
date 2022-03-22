@@ -2,6 +2,7 @@ import React, { useState, useEffect, Fragment } from 'react';
 import axios from 'axios';
 import AdminDachboardReadonly from '../components/adminDachboardReadonly';
 import AdminDachboardEdit from '../components/AdminDachboardEdit';
+import Swal from "sweetalert2";
 
 import { Table, TableCell, TableHead, TableRow, TextField, Button, Grid, Container, Stack } from '@mui/material';
 
@@ -40,14 +41,6 @@ const AdminDachboard = (props) => {
             .catch((err) => console.log(err));
     }
 
-
-    const handledelete = (id) => {
-        axios.delete(`http://127.0.0.1:8000/api/admin/${id}`)
-            .then((res) => window.location.reload())
-            .catch((err) => console.log(err));
-
-    }
-
     const handleEditUser = (event, user) => {
         event.preventDefault();
         setAdminInfo({ ...AdminInfo, editContactId: user.id })
@@ -68,6 +61,23 @@ const AdminDachboard = (props) => {
         axios.put(`http://127.0.0.1:8000/api/admin/${editContactId}`, userInfo)
             .then((res) => window.location.reload())
             .catch((err) => console.log(err));
+    }
+
+    const ConfirmDelete = (id) => {
+        Swal.fire({
+            title: 'Are you sure?',
+            icon: 'warning',
+            showCancelButton: true,
+            confirmButtonColor: '#3085d6',
+            cancelButtonColor: '#d33',
+            confirmButtonText: 'Yes, delete it!'
+        }).then((result) => {
+            if (result.isConfirmed) {
+                axios.delete(`http://127.0.0.1:8000/api/admin/${id}`)
+                .then((res) => window.location.reload())
+                .catch((err) => console.log(err));
+            }
+        })
     }
 
     return (
@@ -103,8 +113,8 @@ const AdminDachboard = (props) => {
                     {AdminInfo.Admins.map((user, index) =>
                         <Fragment key={index}>
                             {AdminInfo.editContactId === user.id ?
-                                (<AdminDachboardEdit data={user} changeData={handlechange} cancel={handleCancel} save={handleEdit} />) :
-                                (<AdminDachboardReadonly data={user} deleteBtn={handledelete} editclick={handleEditUser} />)}
+                                (<AdminDachboardEdit data={user} changeData={ConfirmDelete} cancel={handleCancel} save={handleEdit} />) :
+                                (<AdminDachboardReadonly data={user} deleteBtn={ConfirmDelete} editclick={handleEditUser} />)}
                         </Fragment>
                     )}
                 </Table>
