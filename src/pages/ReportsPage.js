@@ -9,7 +9,8 @@ const ReportsPage = (props) => {
 
   return (
     <>
-      <NavBar />
+          <NavBar admin={localStorage.getItem('admin')}/>
+
       <Grid maxWidth="xl" height="100vh" container>
         <Grid item>
           <SideBar />
