@@ -2,14 +2,23 @@ import { Container, Grid, Paper, Typography } from "@mui/material";
 import NavBar from "../components/Nav/Navbar";
 import SideBar from "../components/SideBar/SideBar";
 import { createRef, useEffect, useState } from "react";
+import axios from 'axios';
+import { useNavigate } from "react-router-dom";
+
 
 const TransactionPage = (props) => {
   const NavRef = createRef();
+  const [admin, setAdmin] = useState();
+  const navigate = useNavigate();
 
+  
+
+console.log(admin);
   return (
     <>
-      <NavBar />
-      <Grid maxWidth="xl" height="100vh" container>
+          <NavBar admin={localStorage.getItem('admin')}/>
+
+     <Grid maxWidth="xl" height="100vh" container>
         <Grid item>
           <SideBar />
         </Grid>
