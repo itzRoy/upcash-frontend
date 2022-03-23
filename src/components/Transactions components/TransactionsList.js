@@ -1,25 +1,11 @@
 import { Paper, Grid, Typography, Divider, List } from "@mui/material";
 import React, { useEffect, useState } from "react";
 import TransactionCard from "./TransactionCard";
-import axios from "axios";
 
-function TransactionsList() {
+function TransactionsList(props) {
   //========- states -=========//
-  const [isLoading, setIsLoading] = useState(true);
-  const [data, setData] = useState({});
 
 
-  useEffect(() => {
-
-    axios.get("http://localhost:8000/api/transactions")
-      .then((response) => {
-
-        setData(response.data.Data);
-        setTimeout(() => setIsLoading(false), 400);
-        console.log(data);
-      });
-
-  }, []);
 
 
 
@@ -28,7 +14,7 @@ function TransactionsList() {
     <Paper
       sx={{
         height: "100%",
-        backgroundColor: 'rgb(231, 235, 240)',
+        backgroundColor: 'rgb(213, 217, 224)',
         padding: "10px",
         pb: "30px",
         overflow: "hidden",
@@ -39,11 +25,10 @@ function TransactionsList() {
       <Typography variant={"h6"} color={'primary'}>Transaction</Typography>
       <Divider variant="fullWidth" />
 
-      {isLoading ? <Typography>loading</Typography>
-        :
-        <List style={{ height: "100%", overflowY: "auto" }}>
-          {data.map(data => { return <TransactionCard key={data.id} transaction={data} /> })}
-        </List>}
+
+      <List style={{ height: "100%", overflowY: "auto" }}>
+        {props.transactions.map(data => { return <TransactionCard key={data.id} transaction={data} /> })}
+      </List>
 
     </Paper>
   );

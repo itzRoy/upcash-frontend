@@ -4,6 +4,19 @@ import SideBar from "../components/SideBar/SideBar";
 import { createRef, useEffect, useState } from "react";
 import Reports from "./D-Reports";
 
+
+const style = {
+  main: {
+    flexGrow: 1,
+    height: "xl",
+    maxWidth: "xl",
+    mt: "74px",
+    mb: "10px",
+    mr: "10px"
+  }
+}
+
+
 const ProfitGoalPage = (props) => {
   const NavRef = createRef();
 
@@ -16,21 +29,16 @@ const ProfitGoalPage = (props) => {
         </Grid>
 
         <Grid
-          sx={{ flexGrow: 1, height: "xl" }}
-          maxWidth="xl"
-          mt={"74px"}
-          mb={"10px"}
-          mr={"10px"}
           item
+          sx={style.main}
+          component={"main"}
         >
-          <main>
-            <Paper
-              style={{ height: "calc(100vh - 84px)" }}
-              sx={{ padding: "20px" }}
-            >
-              <Typography sx={{ bgcolor: "white" }}>Profit-goal</Typography>
-            </Paper>
-          </main>
+          <Paper
+            style={{ height: "calc(100vh - 84px)" }}
+            sx={{ p: '20px', overflowY: 'auto' }}
+            name="mainContainer">
+            <Typography color={'red'}>Profit-Goal</Typography>
+          </Paper>
         </Grid>
       </Grid>
     </>
