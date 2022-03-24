@@ -24,12 +24,13 @@ const NavBar = (props) => {
         <Toolbar>
           <Logo />
 
-          <Typography sx={{ mr: 2 }}>Bakri Hmouda</Typography>
+          <Typography sx={{ mr: 2 }}>{props.admin}</Typography>
           <Button
             color="error"
             name="test"
             onClick={() => {
-              navigate("/login");
+              localStorage.clear();
+              navigate("/");
             }}
             variant="contained"
             disableElevation

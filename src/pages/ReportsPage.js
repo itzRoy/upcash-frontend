@@ -2,7 +2,6 @@ import { Container, Grid, Paper, Typography } from "@mui/material";
 import NavBar from "../components/Nav/Navbar";
 import SideBar from "../components/SideBar/SideBar";
 import { createRef, useEffect, useState } from "react";
-import Reports from "./D-Reports";
 
 
 const style = {
@@ -21,7 +20,8 @@ const ReportsPage = (props) => {
 
   return (
     <>
-      <NavBar />
+      <NavBar admin={localStorage.getItem('admin')} />
+
       <Grid maxWidth="xl" height="100vh" container>
         <Grid item>
           <SideBar />

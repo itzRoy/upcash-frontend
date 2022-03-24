@@ -30,7 +30,7 @@ const TransactionPage = (props) => {
 
 
 
-      axios.get("http://localhost:8000/api/transactions")
+      axios.get("transactions")
         .then((response) => { setData(response.data.Data) })
         .then(() => setIsLoading(false))
         .catch(err => console.log(err));
@@ -42,7 +42,7 @@ const TransactionPage = (props) => {
   return (
 
     <>
-      <NavBar />
+      <NavBar admin={localStorage.getItem('admin')} />
       <Grid container maxWidth="xl" height="100vh">
         <Grid item component={"aside"}>
           <SideBar />
