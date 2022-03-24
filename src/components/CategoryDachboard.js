@@ -16,7 +16,7 @@ const CatDachboard = (props) => {
     });
 
     useEffect(() => {
-        axios.get(`http://127.0.0.1:8000/api/categories`)
+        axios.get(`categories`)
             .then((res) => {
                 let cat = res.data;
                 setcatInfo({ categories: cat })
@@ -35,14 +35,14 @@ const CatDachboard = (props) => {
             type: catInfo.type
         };
 
-        axios.post(`http://127.0.0.1:8000/api/categories`, categoryInfo)
+        axios.post(`categories`, categoryInfo)
             .then((res) => window.location.reload())
             .catch((err) => console.log(err));
     }
 
 
     const handledelete = (id) => {
-        axios.delete(`http://127.0.0.1:8000/api/categories/${id}`)
+        axios.delete(`categories/${id}`)
             .then((res) => window.location.reload())
             .catch((err) => console.log(err));
 
@@ -65,7 +65,7 @@ const CatDachboard = (props) => {
         };
         const editContactId = catInfo.editContactId;
 
-        axios.put(`http://127.0.0.1:8000/api/categories/${editContactId}`, catinfo)
+        axios.put(`categories/${editContactId}`, catinfo)
             .then((res) => window.location.reload())
             .catch((err) => console.log(err));
     }

@@ -16,7 +16,7 @@ const AdminDachboard = (props) => {
     });
 
     useEffect(() => {
-        axios.get(`http://127.0.0.1:8000/api/admin`)
+        axios.get(`admin`)
             .then((res) => {
                 let admn = res.data;
                 setAdminInfo({ Admins: admn })
