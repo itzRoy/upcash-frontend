@@ -1,6 +1,6 @@
 import { Card, Typography } from "@mui/material";
 import { green } from "@mui/material/colors";
-import { Box, height } from "@mui/system";
+import { Box, height, width } from "@mui/system";
 import { DateTime } from "luxon";
 import DeleteIcon from '@mui/icons-material/Delete';
 import Delete from "@mui/icons-material/Delete";
@@ -51,8 +51,10 @@ const TransactionCard = (props) => {
             <Typography fontSize={'0.8rem'} color={'#5B5B5B'} >{humanReadable}</Typography>
           </Box >
         </Box>
-        <Box>
-          <Delete></Delete>
+
+        <Box sx={{ display: 'flex', justifyContent: 'space-between', width: "100%" }}>
+          <Typography fontSize={'0.8rem'} color={'black'}>Note:{note}</Typography>
+          <Delete />
         </Box>
 
       </Card>
