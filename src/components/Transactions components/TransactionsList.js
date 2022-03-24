@@ -6,8 +6,7 @@ function TransactionsList(props) {
   //========- states -=========//
 
 
-
-
+  let data = props.transactions.length
 
   return (
 
@@ -22,14 +21,16 @@ function TransactionsList(props) {
       elevation={0}
     >
 
+
       <Typography variant={"h6"} color={'primary'}>Transaction</Typography>
       <Divider variant="fullWidth" />
 
-
-      <List style={{ height: "100%", overflowY: "auto" }}>
-        {props.transactions.map(data => { return <TransactionCard key={data.id} transaction={data} /> })}
-      </List>
-
+      {data ?
+        <List style={{ height: "100%", overflowY: "auto" }}>
+          {props.transactions.map(data => { return <TransactionCard key={data.id} transaction={data} delete={props.delete} /> })}
+        </List>
+        : <Typography>No Data</Typography>
+      }
     </Paper>
   );
 }

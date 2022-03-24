@@ -37,6 +37,30 @@ const TransactionPage = (props) => {
 
     }, []);
 
+  //Delete Handler 
+  const handelDelete = (id) => {
+    let newData = [];
+    axios.delete(`transactions/${id}`)
+
+      .then(
+
+        (response) => {
+          console.log(id)
+          if (response.status == 200) {
+
+            newData = data.filter((item) => {
+              return item.id != id
+            })
+
+          }
+        }
+      ).then(() => setData(newData))
+
+
+
+
+
+  }
 
 
   return (
@@ -78,7 +102,7 @@ const TransactionPage = (props) => {
                   name="transactions"
 
                 >
-                  <TransactionsList transactions={data} />
+                  <TransactionsList transactions={data} delete={handelDelete} />
                 </Grid>
 
                 <Grid md xs={3} item name="currentBalance">
