@@ -10,6 +10,8 @@ import { useState } from "react";
 const style = {
   card: {
     height: "50px",
+    maxHeight: '100px',
+
     paddingX: "15px",
     display: "flex",
     flexDirection: 'column',
@@ -24,7 +26,13 @@ const style = {
   },
   delete: {
     ":hover": {
-      color: 'red'
+      color: 'red',
+      cursor: 'pointer'
+    }
+  },
+  confirmButton: {
+    backgroundColor: red[800], ":hover": {
+      backgroundColor: green[800]
     }
   }
 }
@@ -73,7 +81,7 @@ const TransactionCard = (props) => {
           <Box height={'50px'} p={'3px'} >
             <Typography textAlign={'right'} fontWeight={600} color={setColor(type)}>{type == 'expense' ? `${amount * -1}$` : `${amount}$`}</Typography>
             <Typography fontSize={'0.8rem'} color={'#5B5B5B'} >{humanReadable}</Typography>
-          </Box >
+          </Box>
         </Box>
 
         <Box sx={{ display: 'flex', justifyContent: 'space-between', width: "100%" }}>
@@ -81,7 +89,7 @@ const TransactionCard = (props) => {
           {/*=== Note ===*/}
           <Typography fontSize={'0.8rem'} color={'black'}>Note:{note}</Typography>
 
-          {/*=== Deleteicon ===*/}
+          {/*=== Delete icon ===*/}
           <Delete onClick={handleClickOpen} sx={style.delete} />
 
         </Box>
@@ -95,7 +103,6 @@ const TransactionCard = (props) => {
         <Dialog
           open={open}
           onClose={handleClose}
-          aria-labelledby="responsive-dialog-title"
         >
           <DialogTitle color={red[700]} id="responsive-dialog-title">
             {"Confirm Delete Transaction"}
@@ -109,7 +116,7 @@ const TransactionCard = (props) => {
             <Button autoFocus onClick={handleClose}>
               Disagree
             </Button>
-            <Button variant="contained" sx={{ backgroundColor: red[800] }} onClick={() => props.delete(id)} autoFocus>
+            <Button variant="contained" sx={style.confirmButton} onClick={() => props.delete(id)} autoFocus>
               Agree
             </Button>
           </DialogActions>

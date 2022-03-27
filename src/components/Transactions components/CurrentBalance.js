@@ -25,11 +25,11 @@ function CurrentBalance(props) {
             if (transaction.category.type === 'income') income += transaction.amount
         })
 
-        let balance = income - expense
+        let balance = income + (expense * -1)
 
         setBalance({
             income: income.toFixed(2),
-            expense: expense.toFixed(2),
+            expense: (expense.toFixed(2) * -1),
             balance: balance.toFixed(2),
         });
 
@@ -60,7 +60,7 @@ function CurrentBalance(props) {
                 <Divider>Balance</Divider>
 
                 <Box display={'flex'} justifyContent={'right'}>
-                    <Typography variant='h6' color={red[700]}>{`${balance.balance}`}$</Typography>
+                    <Typography variant='h6' color={balance.balance > 0 ? green[700] : red[700]}>{`${balance.balance}`}$</Typography>
                 </Box>
             </> : <Typography>No Data</Typography>}
         </Card >

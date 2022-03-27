@@ -13,12 +13,12 @@ function TransactionsList(props) {
     <Paper
       sx={{
         height: "100%",
-        backgroundColor: 'rgb(213, 217, 224)',
+        backgroundColor: 'rgb(231, 235, 240)',
         padding: "10px",
         pb: "30px",
         overflow: "hidden",
       }}
-      elevation={0}
+      elevation={1}
     >
 
 

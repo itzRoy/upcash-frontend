@@ -1,10 +1,11 @@
-import { Container, Grid, Paper, Typography } from "@mui/material";
+import { Button, Container, Dialog, Grid, Paper, Typography } from "@mui/material";
 import NavBar from "../components/Nav/Navbar";
 import SideBar from "../components/SideBar/SideBar";
 import { createRef, useEffect, useState } from "react";
 import TransactionsList from "../components/Transactions components/TransactionsList";
 import CurrentBalance from "../components/Transactions components/CurrentBalance";
-import axios from "axios";
+import axios, { Axios } from "axios";
+import AddTransactionFrom from "../components/Transactions components/addTransactionFrom";
 
 
 const style = {
@@ -15,27 +16,44 @@ const style = {
     mt: "74px",
     mb: "10px",
     mr: "10px"
+  },
+  list: {
+    maxHeight: "100%",
+
   }
 }
 
 
 const TransactionPage = (props) => {
-  const [data, setData] = useState({});
+  // states
+  const [transactionsData, setTransactionsData] = useState([]);
+  const [categoriesData, setCategoriesData] = useState([])
   const [isLoading, setIsLoading] = useState(true);
+  const [open, setOpen] = useState(false);
 
 
   //fetch transactions data
   useEffect(
+
     () => {
 
-
-
+      //get all transactions
       axios.get("transactions")
-        .then((response) => { setData(response.data.Data) })
+        .then((response) => { setTransactionsData(response.data.Data) })
+        .catch(err => console.log(err));
+
+
+      // get all Categories
+      axios.get("categories")
+        .then((response) => { setCategoriesData(response.data) })
         .then(() => setIsLoading(false))
         .catch(err => console.log(err));
 
-    }, []);
+    }
+
+
+    , []);
+
 
   //Delete Handler 
   const handelDelete = (id) => {
@@ -43,22 +61,22 @@ const TransactionPage = (props) => {
     axios.delete(`transactions/${id}`)
 
       .then(
-
         (response) => {
-          console.log(id)
           if (response.status == 200) {
-
-            newData = data.filter((item) => {
+            newData = transactionsData.filter((item) => {
               return item.id != id
             })
 
           }
         }
-      ).then(() => setData(newData))
+      ).then(() => setTransactionsData(newData))
+  }
 
+  //Add new Transaction Handler!
+  const handelSubmit = (body) => {
 
-
-
+    axios.post('transactions', body)
+      .then(response => { if (response.status == 200) console.log(response) })
 
   }
 
@@ -89,30 +107,37 @@ const TransactionPage = (props) => {
                 name="Grid"
                 gap={3}
                 height={"100%"}
-                sx={{ overflow: "auto" }}
+                sx={{ overflow: "auto", padding: "2px", flexWrap: "wrap-reverse", minHeight: "100%" }}
                 columnGap={2}
               >
                 <Grid
                   item
-                  xs
+                  xs={12}
                   md={9}
-                  sx={{
-                    maxHeight: "100%"
-                  }}
+                  sx={style.list}
                   name="transactions"
 
                 >
-                  <TransactionsList transactions={data} delete={handelDelete} />
+                  <TransactionsList transactions={transactionsData} delete={handelDelete} />
                 </Grid>
 
-                <Grid md xs={3} item name="currentBalance">
-                  <CurrentBalance transactions={data} />
+                <Grid md xs={12} item name="currentBalance">
+                  <CurrentBalance transactions={transactionsData} />
+                  <Button variant="contained" sx={{ marginTop: '10px' }} onClick={() => setOpen(true)} fullWidth>Add new Transaction</Button>
                 </Grid>
 
               </Grid>}
           </Paper>
         </Grid>
-      </Grid >
+      </Grid>
+
+      {/* ========= New Transactions Modal ======== */}
+      <Dialog
+        open={open}
+        onClose={() => setOpen(false)}
+      >
+        <AddTransactionFrom openClose={setOpen} categories={categoriesData} submit={handelSubmit} />
+      </Dialog>
     </>
   );
 };
