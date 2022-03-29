@@ -31,6 +31,10 @@ function AddTransactionFrom(props) {
         handelChange(event)
     };
 
+    // =====# Handel Modal close and clear form data ========
+    const handelClose = () => {
+        props.openClose(false); setData({})
+    }
 
     return (
 
@@ -54,6 +58,7 @@ function AddTransactionFrom(props) {
                     {/*====== Title ================================ */}
                     <FormControl required margin="normal"   >
                         <TextField required label="Title" name="title" type="text"
+                            value={data.title}
                             onChange={(e) => handelChange(e)} />
                     </FormControl>
 
@@ -146,7 +151,7 @@ function AddTransactionFrom(props) {
             </DialogContent>
 
             <DialogActions>
-                <Button autoFocus color="error" onClick={() => props.openClose(false)} >
+                <Button autoFocus color="error" onClick={handelClose} >
                     cancel
                 </Button>
                 <Button type="submit" variant="contained" color="success" autoFocus>
@@ -156,7 +161,7 @@ function AddTransactionFrom(props) {
             </DialogActions>
 
 
-        </Dialog>
+        </Dialog >
     )
 }
 
