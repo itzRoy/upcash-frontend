@@ -98,30 +98,28 @@ const TransactionCard = (props) => {
 
 
       {/* ==================== MODAL ==================== */}
-      <div>
 
-        <Dialog
-          open={open}
-          onClose={handleClose}
-        >
-          <DialogTitle color={red[700]} id="responsive-dialog-title">
-            {"Confirm Delete Transaction"}
-          </DialogTitle>
-          <DialogContent>
-            <DialogContentText>
-              Are you sure you want to delete the Transaction: <Typography fontWeight={600} color={green[900]} component={'span'}> {` ${title} `}</Typography>? This Action can not be undone!
-            </DialogContentText>
-          </DialogContent>
-          <DialogActions>
-            <Button autoFocus onClick={handleClose}>
-              Disagree
-            </Button>
-            <Button variant="contained" sx={style.confirmButton} onClick={() => props.delete(id)} autoFocus>
-              Agree
-            </Button>
-          </DialogActions>
-        </Dialog>
-      </div>
+      <Dialog
+        open={open}
+        onClose={handleClose}
+      >
+        <DialogTitle color={red[700]} id="responsive-dialog-title">
+          {"Confirm Delete Transaction"}
+        </DialogTitle>
+        <DialogContent>
+          <DialogContentText>
+            Are you sure you want to delete the Transaction: <Typography fontWeight={600} color={green[900]} component={'span'}> {` ${title} `}</Typography>? This Action can not be undone!
+          </DialogContentText>
+        </DialogContent>
+        <DialogActions>
+          <Button autoFocus onClick={handleClose}>
+            Cancel
+          </Button>
+          <Button variant="contained" sx={style.confirmButton} onClick={() => props.delete(id)} autoFocus>
+            Confirm
+          </Button>
+        </DialogActions>
+      </Dialog>
 
     </>
   );

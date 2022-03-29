@@ -1,80 +1,162 @@
-import { Button, DialogActions, DialogContent, DialogContentText, DialogTitle, Divider, FormControl, FormControlLabel, FormGroup, FormHelperText, FormLabel, Input, InputLabel, MenuItem, Radio, RadioGroup, Select, TextField, Typography } from '@mui/material'
+import { Button, Dialog, DialogActions, DialogContent, DialogTitle, Divider, FormControl, FormGroup, MenuItem, Select, TextareaAutosize, TextField, Typography } from '@mui/material'
 import { green, red } from '@mui/material/colors'
-import React from 'react'
+import DateAdapter from '@mui/lab/AdapterLuxon';
+import { LocalizationProvider, DateTimePicker, StaticDateTimePicker } from '@mui/lab';
+import React, { useState } from 'react'
+import { DateTime } from 'luxon';
 
 function AddTransactionFrom(props) {
+    const [data, setData] = useState({ title: "", amount: "", })
+    const [error, setError] = useState({})
+
+    // ====# handel change from add transaction page and save them in state ====
+    const handelChange = (event) => {
+        const key = event.target.name
+        const value = event.target.value
+        const newData = { ...data, [key]: value }
+        console.log(newData)
+        setData(newData);
+    }
+
+
+    // =====# create and event object for date picker ============
+    const handelDatePicker = (val) => {
+        const dateTime = val.toISO(DateTime)
+        const event = {
+            target: {
+                name: "created_at",
+                value: dateTime
+            }
+        };
+        handelChange(event)
+    };
+
+
     return (
-        <>
+
+        <Dialog
+
+            scroll="paper"
+            fullWidth
+            maxWidth="md"
+            open={props.open}
+            onClose={() => props.openClose(false)}
+        >
+
             <DialogTitle color={green[700]} id="responsive-dialog-title">
                 {"Add a new transaction"}
             </DialogTitle>
-            <form>
-                <DialogContent>
 
-                    <FormGroup>
-                        {/*====== Title ================================ */}
-                        <FormControl required margin="normal" autoFocus >
-                            <InputLabel htmlFor="title">Title</InputLabel>
-                            <Input id="title" type="text" />
+            <DialogContent>
+                <Divider />
+
+                <FormGroup>
+                    {/*====== Title ================================ */}
+                    <FormControl required margin="normal"   >
+                        <TextField required label="Title" name="title" type="text"
+                            onChange={(e) => handelChange(e)} />
+                    </FormControl>
+
+                    {/*====== Amount and currency ================== */}
+                    <FormGroup sx={{ gap: "10px" }} row >
+
+                        <FormControl sx={{ flexGrow: 1 }} required margin="normal" type="number" >
+
+                            <TextField label="amount" name="amount" type="number"
+                                onChange={(e) => handelChange(e)} />
                         </FormControl>
 
-                        {/*====== Amount and currency ================== */}
-                        <FormGroup row>
-
-                            <FormControl required margin="normal" type="number">
-                                <InputLabel htmlFor="amount">Amount</InputLabel>
-                                <Input id="amount" type="number" />
-                            </FormControl>
-
-                            <FormControl margin="normal" >
-                                <InputLabel id="select-currency-type">Currency</InputLabel>
-                                <Select
-                                    labelId="select-currency-type"
-                                    id="currency"
-                                    value={1}
-                                    label="Currency"
-
-                                >
-                                    <MenuItem value={1}>$-USD</MenuItem>
-
-                                </Select>
-                            </FormControl>
-
-                        </FormGroup>
-
-                        {/*====== Type ================================= */}
-                        <FormControl margin="normal" fullWidth >
-                            <InputLabel id="select-expense-type">Transasction type</InputLabel>
-                            <Select variant="standard"
-
-                                labelId="select-expense-type"
-                                id="expense-type"
-                                defaultValue={"expense"}
-                                label="expense type"
-
+                        <FormControl required margin="normal" >
+                            <TextField
+                                select
+                                name="currency_id"
+                                value={1}
+                                label="Currency"
+                                onChange={(e) => handelChange(e)}
                             >
-                                <MenuItem value={"expense"}>Expense</MenuItem>
-                                <MenuItem value={"income"}>Income</MenuItem>
+                                <MenuItem value={1}>$-USD</MenuItem>
 
-                            </Select>
+                            </TextField>
                         </FormControl>
-
-
 
                     </FormGroup>
 
-                </DialogContent>
-                <DialogActions>
-                    <Button autoFocus onClick={() => props.openClose(false)} >
-                        Disagree
-                    </Button>
-                    <Button type="submit" variant="contained" autoFocus>
-                        Agree
-                    </Button>
+                    {/*====== Type ================================= */}
+                    <FormGroup sx={{ gap: "10px" }} row >
+                        <FormControl sx={{ flexGrow: 1 }} margin="normal"  >
 
-                </DialogActions>
-            </form>
-        </>
+                            <TextField variant="outlined"
+                                name="expense-type"
+                                defaultValue={"expense"}
+                                label="Transaction Type"
+                                select
+                            // onChange={(e) => handelCurrencyCHange(e)}
+                            >
+
+                                <MenuItem value={"expense"}>Expense</MenuItem>
+                                <MenuItem value={"income"}>Income</MenuItem>
+
+                            </TextField>
+                        </FormControl>
+
+                        {/*====== Select Category ====================== */}
+                        <FormControl margin="normal" sx={{ flexGrow: 1 }} >
+
+                            <TextField variant="outlined" select
+                                name="category_id"
+                                defaultValue={""}
+                                label="Category"
+                                onChange={(e) => handelChange(e)}
+                            >
+
+                                <MenuItem value={"1"}>test</MenuItem>
+                                <MenuItem value={"2"}>green</MenuItem>
+
+                            </TextField>
+                        </FormControl>
+                    </FormGroup>
+
+
+                    {/*====== Note ================================ */}
+                    <FormControl margin="normal">
+                        <TextField margin="normal" label="note" name="note"
+                            onChange={(e) => handelChange(e)}></TextField>
+                    </FormControl>
+
+
+                    {/*====== Select Date ========================== */}
+                    <FormControl margin="normal" >
+                        <LocalizationProvider dateAdapter={DateAdapter}>
+                            <DateTimePicker
+                                name="created_at"
+                                label="Date & Time picker"
+                                value={DateTime.now()}
+                                maxDateTime={DateTime.now()}
+                                renderInput={(params) => <TextField  {...params} />}
+                                onChange={(val) => handelDatePicker(val)}
+                            />
+                        </LocalizationProvider>
+                    </FormControl>
+
+
+
+                </FormGroup>
+
+
+            </DialogContent>
+
+            <DialogActions>
+                <Button autoFocus color="error" onClick={() => props.openClose(false)} >
+                    cancel
+                </Button>
+                <Button type="submit" variant="contained" color="success" autoFocus>
+                    Add transaction
+                </Button>
+
+            </DialogActions>
+
+
+        </Dialog>
     )
 }
 

@@ -132,12 +132,8 @@ const TransactionPage = (props) => {
       </Grid>
 
       {/* ========= New Transactions Modal ======== */}
-      <Dialog
-        open={open}
-        onClose={() => setOpen(false)}
-      >
-        <AddTransactionFrom openClose={setOpen} categories={categoriesData} submit={handelSubmit} />
-      </Dialog>
+      <AddTransactionFrom openClose={setOpen} open={open} categories={categoriesData} submit={handelSubmit} />
+
     </>
   );
 };
