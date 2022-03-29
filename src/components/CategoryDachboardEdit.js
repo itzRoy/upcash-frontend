@@ -33,8 +33,8 @@ const AdminDachboardEdit = (props) => {
                     </Grid>
                     <Grid item xs={3}>
                         <TableCell>
-                            <ClearIcon onClick={props.cancel} />
-                            <SaveIcon onClick={props.save} />
+                            <ClearIcon style={{ color: "yellow"}} onClick={props.cancel} />
+                            <SaveIcon style={{ color: "white"}} onClick={props.save} />
                         </TableCell>
                     </Grid>
                 </Grid>
