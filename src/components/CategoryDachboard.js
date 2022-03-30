@@ -16,7 +16,7 @@ const CatDachboard = (props) => {
     });
 
     useEffect(() => {
-        axios.get(`http://127.0.0.1:8000/api/categories`)
+        axios.get(`categories`)
             .then((res) => {
                 let cat = res.data;
                 setcatInfo({ categories: cat })

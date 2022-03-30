@@ -10,7 +10,7 @@ const adminDachboardReadonly = (props) => {
             <TableRow
                 sx={{ '&:last-child td, &:last-child th': { border: 0 } }}
             >
-                <Grid container> 
+                <Grid container>
                     <Grid item xs={3}>
                         <TableCell >{props.data.id}</TableCell>
                     </Grid>

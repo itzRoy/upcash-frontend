@@ -1,9 +1,11 @@
 import React from "react";
+import "./index.css";
 import ReactDOM from "react-dom";
 import { BrowserRouter } from "react-router-dom";
 import App from "./App";
 import { createTheme, ThemeProvider } from "@mui/material/styles";
 import { green } from "@mui/material/colors";
+import axios from 'axios';
 import { CssBaseline } from "@mui/material";
 
 const theme = createTheme({
@@ -11,7 +13,7 @@ const theme = createTheme({
     // mode: "dark",
     background: {
       default: "#463B60",
-      // paper: "#31254D",
+      paper: "#F4F4F4",
     },
 
     primary: {
@@ -22,6 +24,13 @@ const theme = createTheme({
     secondary: green,
   },
 });
+
+
+//default config axios
+
+axios.defaults.baseURL= 'http://localhost:8000/api/';
+axios.defaults.headers.common['Authorization'] = 'Bearer ' + localStorage.getItem('token');
+
 
 ReactDOM.render(
   <React.StrictMode>
