@@ -11,24 +11,23 @@ const Login = () => {
 
     const [login, setLogin] = useState({ username: "", password: "" })
     const [errorMsg, setErrorMsg] = useState('');
-    const [errorUsername, setErrorUsername] = useState("");
-    const [errorPass, setErrorPass] = useState("");
+    
 
 
 
     /////////////////////////////handle submit
-    const handleSubmit = async (e) => {
+    const handleSubmit = (e) => {
         e.preventDefault();
         if (!login.username) {
-            setErrorUsername("username required");
-            setTimeout(() => setErrorUsername(""), 5000)
+            setErrorMsg("username required");
+            setTimeout(() => setErrorMsg(""), 5000)
 
             return
         }
 
         else if (!login.password) {
-            setErrorPass("password required");
-            setTimeout(() => setErrorPass(""), 5000)
+            setErrorMsg("password required");
+            setTimeout(() => setErrorMsg(""), 5000)
 
             return
         }
@@ -37,7 +36,7 @@ const Login = () => {
         data.append('username', login.username)
         data.append('password', login.password)
 
-      await  axios.post('login', data)
+         axios.post('login', data)
             .then(res => {
                 localStorage.setItem('token', res.data.token);
                 localStorage.setItem('admin', res.data.admin.username)
@@ -47,7 +46,7 @@ const Login = () => {
                 setLogin({ username: "", password: "" })
                 navigate("/transactions")
             })
-            .catch(err => setErrorMsg(err.message));
+            .catch(err => err.message == "Request failed with status code 401"? setErrorMsg("invalid username/password"): setErrorMsg("server error"));
 
        
 
@@ -88,9 +87,7 @@ const Login = () => {
                     {errorMsg && <Typography variant='caption' color='error'>{errorMsg}</Typography>}
 
                     <form sx={'#463B60'} onSubmit={handleSubmit}>
-                        {errorUsername && <Typography variant='caption' color='error'>{errorUsername}</Typography>}
                         <TextField onChange={handleChange} value={login.username} sx={{ backgroundColor: '#fefefe', borderRadius: "5px" }} size='small' margin='dense' fullWidth type="text" id="username" label="username" variant="filled" />
-                        {errorPass && <Typography variant='caption' color='error'>{errorPass}</Typography>}
 
                         <TextField onChange={handleChange} value={login.password} sx={{ backgroundColor: '#fefefe', marginBottom: '16px', borderRadius: "5px" }} size='small' fullWidth type="password" id="password" label="password" variant="filled" />
 

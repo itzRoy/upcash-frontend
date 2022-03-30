@@ -37,10 +37,7 @@ const Linechart = (props) => {
       legend: {
         position: 'top',
       },
-      title: {
-        display: true,
-        text: 'Chart.js Line Chart',
-      },
+   
     },
   };
 
@@ -53,14 +50,14 @@ const labels = props.labels
       {
         label: 'expense',
         data: props.expensevalues,
-        borderColor: 'rgb(255, 99, 132)',
-        backgroundColor: 'rgba(255, 99, 132, 0.5)',
+        borderColor: 'rgb(211, 47, 47)',
+        backgroundColor: 'rgba(211, 47, 47)',
       },
       {
         label: 'income',
         data: props.incomevalues,
-        borderColor: 'rgb(53, 162, 235)',
-        backgroundColor: 'rgba(53, 162, 235, 0.5)',
+        borderColor: 'rgb(70, 59, 96)',
+        backgroundColor: 'rgba(70, 59, 96)',
       },
     ],
     maintainAspectRatio: false,
