@@ -1,12 +1,15 @@
 import { React, useState, useEffect } from 'react';
 
 import { Line} from 'react-chartjs-2';
+import { Bar } from 'react-chartjs-2';
+
 import {
   Chart as ChartJS,
   CategoryScale,
   LinearScale,
   PointElement,
   LineElement,
+  BarElement,
   ArcElement,
   Title,
   Tooltip,
@@ -20,6 +23,7 @@ ChartJS.register(
   PointElement,
   LineElement,
   ArcElement,
+  BarElement,
   Title,
   Tooltip,
   Legend
@@ -48,17 +52,18 @@ const labels = props.labels
     labels,
     datasets: [
       {
+        label: 'income',
+        data: props.incomevalues,
+        borderColor: 'rgb(0, 230, 118)',
+        backgroundColor: 'rgba(0, 230, 118, .8)',
+      },
+      {
         label: 'expense',
         data: props.expensevalues,
         borderColor: 'rgb(211, 47, 47)',
-        backgroundColor: 'rgba(211, 47, 47)',
+        backgroundColor: 'rgba(211, 47, 47, .8)',
       },
-      {
-        label: 'income',
-        data: props.incomevalues,
-        borderColor: 'rgb(70, 59, 96)',
-        backgroundColor: 'rgba(70, 59, 96)',
-      },
+     
     ],
     maintainAspectRatio: false,
 
@@ -68,7 +73,7 @@ const labels = props.labels
 
   return (
    
-      <Line options={options} data={data} />
+      <Bar options={options} data={data} />
   );
 
 }
