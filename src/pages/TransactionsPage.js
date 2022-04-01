@@ -4,7 +4,7 @@ import SideBar from "../components/SideBar/SideBar";
 import { createRef, useEffect, useState } from "react";
 import TransactionsList from "../components/Transactions components/TransactionsList";
 import CurrentBalance from "../components/Transactions components/CurrentBalance";
-import axios, { Axios } from "axios";
+import axios from "axios";
 import AddTransactionFrom from "../components/Transactions components/addTransactionFrom";
 
 
