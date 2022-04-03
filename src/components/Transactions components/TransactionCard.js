@@ -103,7 +103,7 @@ const TransactionCard = (props) => {
         open={open}
         onClose={handleClose}
       >
-        <DialogTitle color={red[700]} id="responsive-dialog-title">
+        <DialogTitle color={red[700]} id="confirm-delete-dialog">
           {"Confirm Delete Transaction"}
         </DialogTitle>
         <DialogContent>

@@ -76,7 +76,14 @@ const TransactionPage = (props) => {
   const handelSubmit = (body) => {
 
     axios.post('transactions', body)
-      .then(response => { if (response.status == 200) console.log(response) })
+      .then(response => {
+        if (response.status == 200) {
+          let newData = [...transactionsData]
+          newData.unshift(response.data.Data)
+          setTransactionsData(newData)
+        }
+      })
+      .catch((err) => console.log(err));
 
   }
 

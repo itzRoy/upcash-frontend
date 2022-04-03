@@ -1,4 +1,4 @@
-import { Button, Dialog, DialogActions, DialogContent, DialogTitle, Divider, FormControl, FormGroup, MenuItem, Select, TextareaAutosize, TextField, Typography } from '@mui/material'
+import { Alert, Button, Dialog, DialogActions, DialogContent, DialogTitle, Divider, FormControl, FormGroup, MenuItem, Snackbar, TextField, Typography } from '@mui/material'
 import { green, red } from '@mui/material/colors';
 import DateAdapter from '@mui/lab/AdapterLuxon';
 import { LocalizationProvider, DateTimePicker, StaticDateTimePicker } from '@mui/lab';
@@ -13,19 +13,42 @@ function AddTransactionFrom(props) {
     const [catType, setCatType] = useState('expense')
     const [categories, setCategories] = useState([])
     const [errors, setErrors] = useState({ ...errorList })
+    const [openErrorAlert, setOpenErrorAlert] = useState(false);
+    const [openSuccessAlert, setOpenSuccessAlert] = useState(false);
+
 
     //===== get categories on category type change
     useEffect(() => {
         axios.get(`income-expense/${catType}`)
             .then(response => setCategories(response.data))
-            .then(response => console.log(categories))
             .catch(err => console.log(err))
     }, [catType])
 
 
+
+
+    //********** Snacks *******
+    const showAlert = (event) => {
+        if (event === "error") setOpenErrorAlert(true);
+        if (event === "success") setOpenSuccessAlert(true);
+
+    };
+
+    const closeAlert = (event, reason) => {
+        if (reason === 'clickaway') {
+            return;
+        }
+        setOpenErrorAlert(false);
+        setOpenSuccessAlert(false)
+    };
+
+
+    // =========================================================================
+
     //===== handling changing category type =================
     const handelCatTypeChange = (event) => {
         const value = event.target.value
+        // reset category_id after changing category type
         setData({ ...data, category_id: "" })
         setCatType(value)
     }
@@ -35,20 +58,47 @@ function AddTransactionFrom(props) {
         const key = event.target.name
         const value = event.target.value
         const newData = { ...data, [key]: value }
-        console.log(newData)
+
+        // save inputted data inside data state
         setData(newData);
-        handelError(newData);
+
+        //reset error for changed field
+        setErrors({ ...errors, [key]: false })
     }
 
+
     // ======== handling From Submit after Validation using handel error function ====
+    const handelSubmit = () => {
+        if (!checkErrors(data)) {
+            props.submit(data);
+            props.openClose(false);
+            setData({ ...defaultValue })
+            showAlert("success")
+        }
+        else showAlert("error")
+
+    }
+
 
     //===== handling error in form
-    const handelError = (Data) => {
+    const checkErrors = (Data) => {
+        let errorFlag = false
         let newError = { ...errors };
-        (Data.title === "") ? newError = { ...newError, title: true } : newError = { ...newError, title: false };
-        (Data.amount === "") ? newError = { ...newError, amount: true } : newError = { ...newError, amount: false };
-        (Data.category_id === "") ? newError = { ...newError, category_id: true } : newError = { ...newError, category_id: false };
+
+        if (Data.title === "") {
+            newError = { ...newError, title: true }
+            errorFlag = true;
+        }
+        if (Data.amount === "") {
+            newError = { ...newError, amount: true }
+            errorFlag = true;
+        }
+        if (Data.category_id === "") {
+            newError = { ...newError, category_id: true }
+            errorFlag = true
+        }
         setErrors(newError);
+        return errorFlag
     }
 
     //======# create and event object for date picker ============
@@ -68,152 +118,180 @@ function AddTransactionFrom(props) {
         props.openClose(false);
         setData({ ...defaultValue })
         setErrors({ ...errorList })
+        setOpenErrorAlert(false)
     }
 
+
+
+    // #################################################################################
+    // ####### Return ##################################################################
     return (
+        <>
+            <Dialog
+                scroll="paper"
+                fullWidth
+                maxWidth="md"
+                open={props.open}
+                onClose={() => props.openClose(false)}
+            >
 
-        <Dialog
-            scroll="paper"
-            fullWidth
-            maxWidth="md"
-            open={props.open}
-            onClose={() => props.openClose(false)}
-        >
+                <DialogTitle color={green[700]} id="responsive-dialog-title">
+                    {"Add a new transaction"}
+                </DialogTitle>
 
-            <DialogTitle color={green[700]} id="responsive-dialog-title">
-                {"Add a new transaction"}
-            </DialogTitle>
+                <DialogContent>
+                    <Divider />
 
-            <DialogContent>
-                <Divider />
-
-                <FormGroup>
-                    {/*====== Title ================================ */}
-                    <FormControl required margin="normal"   >
-                        <TextField required
-                            label="Title"
-                            name="title"
-                            type="text"
-                            error={errors.title}
-                            helperText={errors.title ? "Title is Required" : ""}
-                            value={data.title}
-                            onChange={e => handelChange(e)} />
-                    </FormControl>
-
-                    {/*====== Amount and currency ================== */}
-                    <FormGroup sx={{ gap: "10px" }} row >
-
-                        <FormControl sx={{ flexGrow: 0.8 }} required margin="normal" type="number" >
-
-                            <TextField
-                                label="amount"
-                                name="amount"
-                                type="number"
-                                error={errors.amount}
-                                helperText={errors.amount ? "amount is Required" : ""}
+                    <FormGroup>
+                        {/*====== Title ================================ */}
+                        <FormControl required margin="normal"   >
+                            <TextField required
+                                label="Title"
+                                name="title"
+                                type="text"
+                                error={errors.title}
+                                helperText={errors.title ? "Title is Required" : ""}
+                                value={data.title}
                                 onChange={e => handelChange(e)} />
                         </FormControl>
 
-                        <FormControl margin="normal" sx={{ flexGrow: 0.2 }} >
-                            <TextField
-                                select
-                                required
-                                name="currency_id"
-                                value={1}
-                                label="Currency"
-                                onChange={(e) => handelChange(e)}
-                            >
-                                <MenuItem value={1}>$-USD</MenuItem>
+                        {/*====== Amount and currency ================== */}
+                        <FormGroup sx={{ gap: "10px" }} row >
 
-                            </TextField>
+                            <FormControl sx={{ flexGrow: 0.8 }} required margin="normal" type="number" >
+
+                                <TextField
+                                    label="amount"
+                                    name="amount"
+                                    type="number"
+                                    error={errors.amount}
+                                    helperText={errors.amount ? "amount is Required" : ""}
+                                    onChange={e => handelChange(e)} />
+                            </FormControl>
+
+                            <FormControl margin="normal" sx={{ flexGrow: 0.2 }} >
+                                <TextField
+                                    select
+                                    required
+                                    name="currency_id"
+                                    value={1}
+                                    label="Currency"
+                                    onChange={(e) => handelChange(e)}
+                                >
+                                    <MenuItem value={1}>$-USD</MenuItem>
+
+                                </TextField>
+                            </FormControl>
+
+                        </FormGroup>
+
+                        {/*====== Type ================================= */}
+                        <FormGroup sx={{ columnGap: "10px", }} row >
+                            <FormControl sx={{ flexGrow: 0.5 }} margin="normal"  >
+
+                                <TextField variant="outlined"
+
+                                    select
+                                    required
+                                    name="expense-type"
+                                    defaultValue={"expense"}
+                                    label="Transaction Type"
+                                    onChange={e => handelCatTypeChange(e)}
+                                >
+
+                                    <MenuItem value={"expense"}>Expense</MenuItem>
+                                    <MenuItem value={"income"}>Income</MenuItem>
+
+                                </TextField>
+                            </FormControl>
+
+                            {/*====== Select Category ====================== */}
+                            <FormControl margin="normal" sx={{ flexGrow: 0.5 }} >
+
+                                <TextField variant="outlined"
+                                    select
+                                    required
+                                    id="category"
+                                    name="category_id"
+                                    value={data.category_id}
+                                    label="Category"
+                                    error={errors.category_id}
+                                    helperText={errors.category_id ? "category is Required" : ""}
+                                    onChange={e => handelChange(e)}
+                                >
+
+                                    {categories.map((item) => {
+                                        return <MenuItem key={item.id} value={item.id}>{item.name}</MenuItem>
+                                    })}
+
+                                </TextField>
+                            </FormControl>
+                        </FormGroup>
+
+
+                        {/*====== Note ================================ */}
+                        <FormControl margin="normal">
+                            <TextField label="note" name="note"
+                                onChange={e => handelChange(e)}></TextField>
                         </FormControl>
+
+
+                        {/*====== Select Date ========================== */}
+                        <FormControl margin="normal" >
+                            <LocalizationProvider dateAdapter={DateAdapter}>
+                                <DateTimePicker
+                                    name="created_at"
+                                    label="Date & Time picker"
+                                    value={data.created_at}
+                                    maxDateTime={DateTime.now()}
+                                    renderInput={(params) => <TextField  {...params} />}
+                                    onChange={val => handelDatePicker(val)}
+                                />
+                            </LocalizationProvider>
+                        </FormControl>
+
+
 
                     </FormGroup>
 
-                    {/*====== Type ================================= */}
-                    <FormGroup sx={{ columnGap: "10px", }} row >
-                        <FormControl sx={{ flexGrow: 0.5 }} margin="normal"  >
 
-                            <TextField variant="outlined"
+                </DialogContent>
 
-                                select
-                                required
-                                name="expense-type"
-                                defaultValue={"expense"}
-                                label="Transaction Type"
-                                onChange={e => handelCatTypeChange(e)}
-                            >
+                <DialogActions>
+                    <Button autoFocus color="error" onClick={handelClose} >
+                        cancel
+                    </Button>
+                    <Button onClick={handelSubmit} type="submit" variant="contained" color="success" autoFocus>
+                        Add transaction
+                    </Button>
 
-                                <MenuItem value={"expense"}>Expense</MenuItem>
-                                <MenuItem value={"income"}>Income</MenuItem>
-
-                            </TextField>
-                        </FormControl>
-
-                        {/*====== Select Category ====================== */}
-                        <FormControl margin="normal" sx={{ flexGrow: 0.5 }} >
-
-                            <TextField variant="outlined"
-                                select
-                                required
-                                id="category"
-                                name="category_id"
-                                value={data.category_id}
-                                label="Category"
-                                error={errors.category_id}
-                                helperText={errors.category_id ? "category is Required" : ""}
-                                onChange={e => handelChange(e)}
-                            >
-
-                                {categories.map((item) => {
-                                    return <MenuItem key={item.id} value={item.id}>{item.name}</MenuItem>
-                                })}
-
-                            </TextField>
-                        </FormControl>
-                    </FormGroup>
+                </DialogActions>
 
 
-                    {/*====== Note ================================ */}
-                    <FormControl margin="normal">
-                        <TextField label="note" name="note"
-                            onChange={e => handelChange(e)}></TextField>
-                    </FormControl>
+            </Dialog>
+            {/*========== Notification ================ */}
 
+            <Snackbar open={openErrorAlert} autoHideDuration={4000} onClose={closeAlert}>
+                <Alert
+                    onClose={closeAlert}
+                    severity="error"
 
-                    {/*====== Select Date ========================== */}
-                    <FormControl margin="normal" >
-                        <LocalizationProvider dateAdapter={DateAdapter}>
-                            <DateTimePicker
-                                name="created_at"
-                                label="Date & Time picker"
-                                value={data.created_at}
-                                maxDateTime={DateTime.now()}
-                                renderInput={(params) => <TextField  {...params} />}
-                                onChange={val => handelDatePicker(val)}
-                            />
-                        </LocalizationProvider>
-                    </FormControl>
+                    sx={{ width: '100%', color: "white", backgroundColor: red[900] }}
+                >
+                    Required fields can not be empty!
+                </Alert>
+            </Snackbar>
 
-
-
-                </FormGroup>
-
-
-            </DialogContent>
-
-            <DialogActions>
-                <Button autoFocus color="error" onClick={handelClose} >
-                    cancel
-                </Button>
-                <Button onClick={handelSubmit} type="submit" variant="contained" color="success" autoFocus>
-                    Add transaction
-                </Button>
-
-            </DialogActions>
-
-
-        </Dialog>
+            <Snackbar open={openSuccessAlert} autoHideDuration={4000} onClose={closeAlert}>
+                <Alert
+                    onClose={closeAlert}
+                    severity="success"
+                    sx={{ width: '100%', color: "white", backgroundColor: green[800] }}
+                >
+                    Transaction was successfully created
+                </Alert>
+            </Snackbar>
+        </>
     )
 }
 
