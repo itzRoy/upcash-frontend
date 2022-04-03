@@ -13,7 +13,6 @@ function CurrentBalance(props) {
 
     //check if there is data in props
     let data = props.transactions.length
-
     useEffect(() => {
 
 
@@ -21,18 +20,17 @@ function CurrentBalance(props) {
         let expense = 0
 
         props.transactions.map(transaction => {
-            if (transaction.category.type === 'expense') expense += transaction.amount
-            if (transaction.category.type === 'income') income += transaction.amount
+            if (transaction.category.type === 'expense') expense += parseInt(transaction.amount)
+            if (transaction.category.type === 'income') income += parseInt(transaction.amount)
         })
 
         let balance = income + (expense * -1)
 
         setBalance({
             income: income.toFixed(2),
-            expense: (expense.toFixed(2) * -1),
+            expense: (expense * -1).toFixed(2),
             balance: balance.toFixed(2),
         });
-
     }, [props])
 
 
