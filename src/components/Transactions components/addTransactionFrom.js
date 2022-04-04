@@ -17,13 +17,20 @@ function AddTransactionFrom(props) {
     const [openSuccessAlert, setOpenSuccessAlert] = useState(false);
 
 
+    //===== reset form 
+    useEffect(() => {
+        setCatType("expense")
+        setData({ ...defaultValue })
+        setErrors({ ...errorList })
+        setOpenErrorAlert(false)
+    }, [])
+
     //===== get categories on category type change
     useEffect(() => {
         axios.get(`income-expense/${catType}`)
             .then(response => setCategories(response.data))
             .catch(err => console.log(err))
-    }, [catType,])
-
+    }, [catType])
 
 
 
@@ -73,7 +80,6 @@ function AddTransactionFrom(props) {
             props.submit(data);
             props.openClose(false);
             setData({ ...defaultValue })
-            setCatType("expense")
             showAlert("success")
         }
         else showAlert("error")
@@ -117,10 +123,6 @@ function AddTransactionFrom(props) {
     //======# Handel Modal close and clear form data ========
     const handelClose = () => {
         props.openClose(false);
-        setData({ ...defaultValue })
-        setErrors({ ...errorList })
-        setOpenErrorAlert(false)
-        setCatType("expense")
     }
 
 
