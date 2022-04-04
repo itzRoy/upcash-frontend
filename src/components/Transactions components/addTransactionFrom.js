@@ -22,7 +22,7 @@ function AddTransactionFrom(props) {
         axios.get(`income-expense/${catType}`)
             .then(response => setCategories(response.data))
             .catch(err => console.log(err))
-    }, [catType])
+    }, [catType,])
 
 
 
@@ -73,6 +73,7 @@ function AddTransactionFrom(props) {
             props.submit(data);
             props.openClose(false);
             setData({ ...defaultValue })
+            setCatType("expense")
             showAlert("success")
         }
         else showAlert("error")
@@ -119,6 +120,7 @@ function AddTransactionFrom(props) {
         setData({ ...defaultValue })
         setErrors({ ...errorList })
         setOpenErrorAlert(false)
+        setCatType("expense")
     }
 
 
