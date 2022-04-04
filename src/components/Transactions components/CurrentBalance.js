@@ -4,7 +4,6 @@ import { Box } from '@mui/system'
 import React, { useEffect, useState } from 'react'
 
 function CurrentBalance(props) {
-    // is Loading State
 
     const [balance, setBalance] = useState({
         income: 0,
@@ -12,28 +11,26 @@ function CurrentBalance(props) {
         balance: 0,
     });
 
-
+    //check if there is data in props
+    let data = props.transactions.length
     useEffect(() => {
 
 
         let income = 0
         let expense = 0
-        console.log('use effect')
 
         props.transactions.map(transaction => {
-            console.log(transaction.category.type)
-            if (transaction.category.type === 'expense') expense += transaction.amount
-            if (transaction.category.type === 'lebneni') income += transaction.amount
+            if (transaction.category.type === 'expense') expense += parseInt(transaction.amount)
+            if (transaction.category.type === 'income') income += parseInt(transaction.amount)
         })
 
-        let balance = income - expense
+        let balance = income + (expense * -1)
 
         setBalance({
             income: income.toFixed(2),
-            expense: expense.toFixed(2),
+            expense: (expense * -1).toFixed(2),
             balance: balance.toFixed(2),
         });
-
     }, [props])
 
 
@@ -48,22 +45,22 @@ function CurrentBalance(props) {
 
             <Typography variant='h6' color="primary">CurrentBalance</Typography>
             <Divider />
+            {data ? <>
+                <Box mt={'10px'} display={'flex'}>
+                    <Typography flexGrow={1}>income:</Typography>
+                    <Typography color={green[700]}>{`${balance.income}`}$</Typography>
+                </Box>
 
-            <Box mt={'10px'} display={'flex'}>
-                <Typography flexGrow={1}>income:</Typography>
-                <Typography color={green[700]}>{`${balance.income}`}$</Typography>
-            </Box>
+                <Box display={'flex'} my={'10px'}>
+                    <Typography flexGrow={1}>expense:</Typography>
+                    <Typography color={red[700]}>{`${balance.expense}`}$</Typography>
+                </Box>
+                <Divider>Balance</Divider>
 
-            <Box display={'flex'} my={'10px'}>
-                <Typography flexGrow={1}>expense:</Typography>
-                <Typography color={red[700]}>{`${balance.expense}`}$</Typography>
-            </Box>
-            <Divider>Balance</Divider>
-
-            <Box display={'flex'} justifyContent={'right'}>
-                <Typography variant='h6' color={red[700]}>{`${balance.balance}`}$</Typography>
-            </Box>
-
+                <Box display={'flex'} justifyContent={'right'}>
+                    <Typography variant='h6' color={balance.balance > 0 ? green[700] : red[700]}>{`${balance.balance}`}$</Typography>
+                </Box>
+            </> : <Typography>No Data</Typography>}
         </Card >
     )
 }
