@@ -34,6 +34,15 @@ const style = {
     backgroundColor: red[800], ":hover": {
       backgroundColor: green[800]
     }
+  },
+  edit: {
+    fontSize: "0.8rem",
+    lineHeight: "25px",
+    fontWeight: 800,
+    ":hover": {
+      color: green[800],
+      cursor: 'pointer'
+    }
   }
 }
 
@@ -41,7 +50,9 @@ const TransactionCard = (props) => {
 
   // <-----React Function Start-----> //
   const [open, setOpen] = useState(false);
+  const [openEdit, setOpenEdit] = useState(false);
 
+  // destructure transactions data from props
   const { id, title, amount, note, category, currency, created_at: date } = props.transaction;
   const { name: categoryName, type } = props.transaction.category
 
@@ -87,10 +98,14 @@ const TransactionCard = (props) => {
         <Box sx={{ display: 'flex', justifyContent: 'space-between', width: "100%" }}>
 
           {/*=== Note ===*/}
-          <Typography fontSize={'0.8rem'} color={'black'}>Note:{note}</Typography>
+          <Typography sx={{ flexGrow: 0.99 }} fontSize={'0.8rem'} color={'black'}>Note:{note}</Typography>
+
+
+          {/*=== edit icon ===*/}
+          <Typography onClick={null} sx={style.edit}>Edit</Typography>
 
           {/*=== Delete icon ===*/}
-          <Delete onClick={handleClickOpen} sx={style.delete} />
+          <Delete onClick={() => setOpen(true)} sx={style.delete} />
 
         </Box>
 
@@ -101,7 +116,7 @@ const TransactionCard = (props) => {
 
       <Dialog
         open={open}
-        onClose={handleClose}
+        onClose={() => setOpen(false)}
       >
         <DialogTitle color={red[700]} id="confirm-delete-dialog">
           {"Confirm Delete Transaction"}
@@ -112,7 +127,7 @@ const TransactionCard = (props) => {
           </DialogContentText>
         </DialogContent>
         <DialogActions>
-          <Button autoFocus onClick={handleClose}>
+          <Button autoFocus onClick={() => setOpen(false)}>
             Cancel
           </Button>
           <Button variant="contained" sx={style.confirmButton} onClick={() => props.delete(id)} autoFocus>
