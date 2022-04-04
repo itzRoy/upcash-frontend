@@ -29,7 +29,7 @@ const TransactionPage = (props) => {
   const [transactionsData, setTransactionsData] = useState([]);
   const [categoriesData, setCategoriesData] = useState([])
   const [isLoading, setIsLoading] = useState(true);
-  const [open, setOpen] = useState(false);
+  const [openAddDialog, setOpenAddDialog] = useState(false);
 
 
   //fetch transactions data
@@ -73,9 +73,9 @@ const TransactionPage = (props) => {
   }
 
   //Add new Transaction Handler!
-  const handelSubmit = (body) => {
+  const handelSubmit = (data) => {
 
-    axios.post('transactions', body)
+    axios.post('transactions', data)
       .then(response => {
         if (response.status == 200) {
           let newData = [...transactionsData]
@@ -85,6 +85,10 @@ const TransactionPage = (props) => {
       })
       .catch((err) => console.log(err));
 
+  }
+
+  const handelUpdate = (id, data) => {
+    console.log("id:", id, "data:", data)
   }
 
 
@@ -125,12 +129,12 @@ const TransactionPage = (props) => {
                   name="transactions"
 
                 >
-                  <TransactionsList transactions={transactionsData} delete={handelDelete} />
+                  <TransactionsList transactions={transactionsData} delete={handelDelete} update={handelUpdate} />
                 </Grid>
 
                 <Grid md xs={12} item name="currentBalance">
                   <CurrentBalance transactions={transactionsData} />
-                  <Button variant="contained" sx={{ marginTop: '10px' }} onClick={() => setOpen(true)} fullWidth>Add new Transaction</Button>
+                  <Button variant="contained" sx={{ marginTop: '10px' }} onClick={() => setOpenAddDialog(true)} fullWidth>Add new Transaction</Button>
                 </Grid>
 
               </Grid>}
@@ -139,7 +143,7 @@ const TransactionPage = (props) => {
       </Grid>
 
       {/* ========= New Transactions Modal ======== */}
-      <AddTransactionFrom openClose={setOpen} open={open} categories={categoriesData} submit={handelSubmit} />
+      <AddTransactionFrom openClose={setOpenAddDialog} open={openAddDialog} categories={categoriesData} submit={handelSubmit} />
 
     </>
   );

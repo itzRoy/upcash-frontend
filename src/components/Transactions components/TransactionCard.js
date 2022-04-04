@@ -5,6 +5,7 @@ import { DateTime } from "luxon";
 import DeleteIcon from '@mui/icons-material/Delete';
 import Delete from "@mui/icons-material/Delete";
 import { useState } from "react";
+import EditTransactionFrom from "./editTransactionsForm"
 
 
 const style = {
@@ -49,7 +50,7 @@ const style = {
 const TransactionCard = (props) => {
 
   // <-----React Function Start-----> //
-  const [open, setOpen] = useState(false);
+  const [openDeleteDialog, setOpenDeleteDialog] = useState(false);
   const [openEdit, setOpenEdit] = useState(false);
 
   // destructure transactions data from props
@@ -67,11 +68,11 @@ const TransactionCard = (props) => {
   }
 
   const handleClickOpen = () => {
-    setOpen(true);
+    setOpenDeleteDialog(true);
   };
 
   const handleClose = () => {
-    setOpen(false);
+    setOpenDeleteDialog(false);
   };
 
 
@@ -102,10 +103,10 @@ const TransactionCard = (props) => {
 
 
           {/*=== edit icon ===*/}
-          <Typography onClick={null} sx={style.edit}>Edit</Typography>
+          <Typography onClick={() => setOpenEdit(true)} sx={style.edit}>Edit</Typography>
 
           {/*=== Delete icon ===*/}
-          <Delete onClick={() => setOpen(true)} sx={style.delete} />
+          <Delete onClick={() => setOpenDeleteDialog(true)} sx={style.delete} />
 
         </Box>
 
@@ -115,8 +116,8 @@ const TransactionCard = (props) => {
       {/* ==================== MODAL ==================== */}
 
       <Dialog
-        open={open}
-        onClose={() => setOpen(false)}
+        open={openDeleteDialog}
+        onClose={() => setOpenDeleteDialog(false)}
       >
         <DialogTitle color={red[700]} id="confirm-delete-dialog">
           {"Confirm Delete Transaction"}
@@ -127,7 +128,7 @@ const TransactionCard = (props) => {
           </DialogContentText>
         </DialogContent>
         <DialogActions>
-          <Button autoFocus onClick={() => setOpen(false)}>
+          <Button autoFocus onClick={() => setOpenDeleteDialog(false)}>
             Cancel
           </Button>
           <Button variant="contained" sx={style.confirmButton} onClick={() => props.delete(id)} autoFocus>
@@ -135,7 +136,7 @@ const TransactionCard = (props) => {
           </Button>
         </DialogActions>
       </Dialog>
-
+      <EditTransactionFrom open={openEdit} openClose={setOpenEdit} data={props.transaction} update={props.update} />
     </>
   );
 };

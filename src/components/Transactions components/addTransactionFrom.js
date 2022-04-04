@@ -23,7 +23,7 @@ function AddTransactionFrom(props) {
         setData({ ...defaultValue })
         setErrors({ ...errorList })
         setOpenErrorAlert(false)
-    }, [])
+    }, [props.open])
 
     //===== get categories on category type change
     useEffect(() => {

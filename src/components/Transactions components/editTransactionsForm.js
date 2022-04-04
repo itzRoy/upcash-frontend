@@ -6,15 +6,20 @@ import React, { useEffect, useRef, useState } from 'react';
 import { DateTime } from 'luxon';
 import axios from 'axios';
 
-function AddTransactionFrom(props) {
-    const defaultValue = { title: "", amount: "", note: "", category_id: "", currency_id: 1, created_at: DateTime.now(), }
+function EditTransactionFrom(props) {
     const errorList = { title: false, amount: false, category_id: false, }
-    const [data, setData] = useState({ ...defaultValue })
-    const [catType, setCatType] = useState('expense')
+    const [data, setData] = useState(props.data)
+    const [catType, setCatType] = useState(data.category.type)
     const [categories, setCategories] = useState([])
     const [errors, setErrors] = useState({ ...errorList })
     const [openErrorAlert, setOpenErrorAlert] = useState(false);
     const [openSuccessAlert, setOpenSuccessAlert] = useState(false);
+
+    //===== reset from to original data on open
+    useEffect(() => {
+        setData(props.data);
+        console.log('hey')
+    }, [props.open])
 
 
     //===== get categories on category type change
@@ -22,6 +27,7 @@ function AddTransactionFrom(props) {
         axios.get(`income-expense/${catType}`)
             .then(response => setCategories(response.data))
             .catch(err => console.log(err))
+        console.log("useEffect:", catType)
     }, [catType])
 
 
@@ -68,12 +74,10 @@ function AddTransactionFrom(props) {
 
 
     // ======== handling From Submit after Validation using handel error function ====
-    const handelSubmit = () => {
+    const handelUpdate = () => {
         if (!checkErrors(data)) {
-            props.submit(data);
+            props.update(data.id, data);
             props.openClose(false);
-            setData({ ...defaultValue })
-            setCatType("expense")
             showAlert("success")
         }
         else showAlert("error")
@@ -117,10 +121,8 @@ function AddTransactionFrom(props) {
     //======# Handel Modal close and clear form data ========
     const handelClose = () => {
         props.openClose(false);
-        setData({ ...defaultValue })
         setErrors({ ...errorList })
         setOpenErrorAlert(false)
-        setCatType("expense")
     }
 
 
@@ -137,8 +139,8 @@ function AddTransactionFrom(props) {
                 onClose={() => props.openClose(false)}
             >
 
-                <DialogTitle color={green[700]} id="responsive-dialog-title">
-                    {"Add a new transaction"}
+                <DialogTitle color={green[700]} id="edit-transaction-dialog">
+                    {"Edit transaction"}
                 </DialogTitle>
 
                 <DialogContent>
@@ -166,6 +168,7 @@ function AddTransactionFrom(props) {
                                     label="amount"
                                     name="amount"
                                     type="number"
+                                    value={data.amount}
                                     error={errors.amount}
                                     helperText={errors.amount ? "amount is Required" : ""}
                                     onChange={e => handelChange(e)} />
@@ -196,7 +199,7 @@ function AddTransactionFrom(props) {
                                     select
                                     required
                                     name="expense-type"
-                                    defaultValue={"expense"}
+                                    value={catType}
                                     label="Transaction Type"
                                     onChange={e => handelCatTypeChange(e)}
                                 >
@@ -233,7 +236,7 @@ function AddTransactionFrom(props) {
 
                         {/*====== Note ================================ */}
                         <FormControl margin="normal">
-                            <TextField label="note" name="note"
+                            <TextField label="note" name="note" value={data.note || ""}
                                 onChange={e => handelChange(e)}></TextField>
                         </FormControl>
 
@@ -261,10 +264,10 @@ function AddTransactionFrom(props) {
 
                 <DialogActions>
                     <Button autoFocus color="error" onClick={handelClose} >
-                        cancel
+                        Cancel
                     </Button>
-                    <Button onClick={handelSubmit} type="submit" variant="contained" color="success" autoFocus>
-                        Add transaction
+                    <Button onClick={handelUpdate} type="submit" variant="contained" color="success" autoFocus>
+                        Save
                     </Button>
 
                 </DialogActions>
@@ -297,4 +300,4 @@ function AddTransactionFrom(props) {
     )
 }
 
-export default AddTransactionFrom
+export default EditTransactionFrom

@@ -89,7 +89,7 @@ const AdminDachboard = (props) => {
     const ConfirmDelete = (id) => {
         Swal.fire({
             title: 'Are you sure? You want to delete this Admin',
-            
+
             icon: 'warning',
             showCancelButton: true,
             confirmButtonColor: '#3085d6',
@@ -108,7 +108,7 @@ const AdminDachboard = (props) => {
         <div>
             <Container maxWidth="xl">
 
-                <Stack direction="row" spacing={2} justifyContent="center" style={{ marginTop:'25px',marginBottom:'25px'}}>
+                <Stack direction="row" spacing={2} justifyContent="center" style={{ marginTop: '25px', marginBottom: '25px' }}>
                     <TextField id="outlined-basic" type='text' name='username' onChange={handlechange} label="username" variant="outlined" />
                     <TextField id="outlined-basic" type='text' name='password' onChange={handlechange} label="password" variant="outlined" />
                     <Button type='button' onClick={handleAdd} variant="contained" disableElevation>ADD</Button>
