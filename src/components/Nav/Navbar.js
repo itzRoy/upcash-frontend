@@ -7,8 +7,8 @@ import {
   Typography,
   useTheme,
 } from "@mui/material";
-import { green, purple, red } from "@mui/material/colors";
-import { Box, color } from "@mui/system";
+import Swal from "sweetalert2";
+
 import * as React from "react";
 import { useNavigate } from "react-router-dom";
 import Logo from "./Logo";
@@ -29,8 +29,21 @@ const NavBar = (props) => {
             color="error"
             name="test"
             onClick={() => {
-              localStorage.clear();
-              navigate("/");
+              Swal.fire({
+                title: 'Are you sure? You want to delete this Admin',
+
+                icon: 'warning',
+                showCancelButton: true,
+                confirmButtonColor: '#3085d6',
+                cancelButtonColor: '#d33',
+                confirmButtonText: 'Yes, delete it!'
+              }).then((result) => {
+                if (result.isConfirmed) {
+                  localStorage.clear();
+                  navigate("/");
+                }
+              })
+
             }}
             variant="contained"
             disableElevation

@@ -46,7 +46,7 @@ const AdminDachboard = (props) => {
             password: AdminInfo.password
         };
 
-        axios.post(`http://127.0.0.1:8000/api/admin`, userInfo)
+        axios.post(`addadmin`, userInfo)
             .then((res) => window.location.reload())
             .catch((err) => console.log(err));
         Swal.fire({

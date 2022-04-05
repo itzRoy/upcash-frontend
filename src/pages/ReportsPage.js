@@ -31,6 +31,9 @@ const ReportsPage = (props) => {
   const [transactions, setTransactions] = useState([])
   const [value, setValue] = useState(['', ''])
   const [dropdown, setDropdown] = useState('day');
+  const [minDate, setMinDate] = useState(new Date(-8640000000000000));
+  const [maxDate, setMaxDate] = useState(new Date(8640000000000000));
+
 
   useEffect(
     () => {
@@ -46,15 +49,20 @@ const ReportsPage = (props) => {
 
       axios.get("transactions")
         .then(response => setTransactions(response.data.Data))
+      axios.get("transactions").then((response) => {
+        const minD = (response.data.Data).reduce((acc, current) => new Date(acc).getTime() > new Date(current["created_at"]).getTime() ? acc = new Date(current["created_at"]) : acc, maxDate)
+        const maxD = (response.data.Data).reduce((acc, current) => new Date(acc).getTime() < new Date(current["created_at"]).getTime() ? acc = new Date(current["created_at"]) : acc, minDate)
 
-      setValue(["Wed Jan 01 2020 00:00:00 GMT+0200 (Eastern European Standard Time)", "Sun Jan 01 2023 00:00:00 GMT+0200 (Eastern European Standard Time)"])
+        setMinDate(new Date(minD).getTime())
+        setMaxDate(new Date(maxD).getTime())
+        setValue([new Date(minD), new Date(maxD)])
+      })
 
     }, []);
 
   const handleChange = (event) => {
     setDropdown(event.target.value);
   }
-
 
 
   //format date for one item (string)
@@ -66,23 +74,24 @@ const ReportsPage = (props) => {
     let minutes = date_ob.getMinutes();
     let seconds = date_ob.getSeconds();
 
-    if(dropdown === "day"){
+    if (dropdown === "day") {
       return month + "-" + date;
-    }else if(dropdown == "hour"){
+    } else if (dropdown == "hour") {
       return month + "-" + date + "H" + hours
-    } else if(dropdown === "minute"){
+    } else if (dropdown === "minute") {
       return month + "-" + date + "H" + hours + ":" + minutes
+    } else if (dropdown === "second") {
+      return month + "-" + date + "H" + hours + ":" + minutes + ":" + seconds
     }
     else return month
-    // dropdown === "day" ? month + "-" + date : dropdown == "hour"? month + "-" + date + "H" + hours :month
-    // return month + "-" + date + "H" + hours + ":" + minutes
-    // + ":" + seconds;
   }
 
 
   // format date based on array of objects with "created_at" value
   const getDateArray = (input) => {
-    const array = input.filter(i => new Date(i["created_at"]).getTime() >= new Date(value[0]).getTime() - 1 && new Date(i["created_at"]).getTime() <= new Date(value[1]).getTime() + 1).sort((a, b) => (a["created_at"] > b["created_at"]) ? 1 : ((b["created_at"] > a["created_at"]) ? -1 : 0))
+    if(value[0] && value[1]){
+      const array = input.filter(i => new Date(i["created_at"]).getTime() >= new Date(value[0]).getTime() && new Date(i["created_at"]).getTime() -86400000 <= new Date(value[1].getTime() || new Date(maxDate) ))
+      .sort((a, b) => (a["created_at"] > b["created_at"]) ? 1 : ((b["created_at"] > a["created_at"]) ? -1 : 0))
     const arr = array.map(item => {
       let date_ob = new Date(item["created_at"])
       let month = (date_ob.toLocaleString('en-us', { month: 'short' }));
@@ -90,20 +99,22 @@ const ReportsPage = (props) => {
       let hours = date_ob.getHours();
       let minutes = date_ob.getMinutes();
       let seconds = date_ob.getSeconds();
-      
-      if(dropdown === "day"){
+
+      if (dropdown === "day") {
         return month + "-" + date;
-      }else if(dropdown == "hour"){
+      } else if (dropdown == "hour") {
         return month + "-" + date + "H" + hours
-      } else if(dropdown === "minute"){
+      } else if (dropdown === "minute") {
         return month + "-" + date + "H" + hours + ":" + minutes
+      } else if (dropdown === "second") {
+        return month + "-" + date + "H" + hours + ":" + minutes + ":" + seconds
       }
       else return month
 
-      // return month + "-" + date + "H" + hours + ":" + minutes
-      // + ":" + seconds;
     })
     return arr;
+    }return
+    
   }
 
   // lables for line chart
@@ -155,7 +166,7 @@ const ReportsPage = (props) => {
   //getValues income pie
   const pieValues = (arr) => {
     const filtered = arr.map(
-      x => transactions.filter(item => item.category.name == x && new Date(item["created_at"]).getTime() >= new Date(value[0]).getTime() - 1 && new Date(item["created_at"]).getTime() <= new Date(value[1]).getTime() + 1))
+      x => transactions.filter(item => item.category.name == x && new Date(item["created_at"]).getTime() >= new Date(value[0]).getTime() && new Date(item["created_at"]).getTime()  -86400000<= new Date(value[1]).getTime() + 1))
     const reduced = filtered.map(i => {
       if (i.length > 0) {
         return i.reduce((total, current) => { return total += current.amount }, 0)
@@ -163,8 +174,6 @@ const ReportsPage = (props) => {
     })
     return reduced;
   }
-
-
 
 
   return (
@@ -193,6 +202,8 @@ const ReportsPage = (props) => {
             {/* localization time picker from mui */}
             <LocalizationProvider dateAdapter={AdapterDateFns}>
               <MobileDateRangePicker
+                minDate={new Date(minDate).getTime()}
+                maxDate={new Date(maxDate).getTime()}
                 style={{ 'margin': '0 auto', 'textAlign': 'center' }}
                 startText="start"
                 endText="end"
@@ -209,21 +220,23 @@ const ReportsPage = (props) => {
                     <TextField {...endProps} />
                     <Box sx={{ mx: 2, height: "1rem" }}> per </Box>
                     <Box >
-                    <FormControl fullWidth sx={{ mr: 2, ml: 2 }}>
-                      <InputLabel >Per</InputLabel>
-                      <Select
-                        id="demo-simple-select"
-                        value={dropdown}
-                        label="Per"
-                        onChange={handleChange}
-                      >
-                        <MenuItem value={"mounth"}>mounth</MenuItem>
-                        <MenuItem value={"day"}>day</MenuItem>
-                        <MenuItem value={"hour"}>hour</MenuItem>
-                        <MenuItem value={"minute"}>minute</MenuItem>
+                      <FormControl fullWidth sx={{ mr: 2, ml: 2 }}>
+                        <InputLabel >Per</InputLabel>
+                        <Select
+                          id="demo-simple-select"
+                          value={dropdown}
+                          label="Per"
+                          onChange={handleChange}
+                        >
+                          <MenuItem value={"mounth"}>mounth</MenuItem>
+                          <MenuItem value={"day"}>day</MenuItem>
+                          <MenuItem value={"hour"}>hour</MenuItem>
+                          <MenuItem value={"minute"}>minute</MenuItem>
+                          <MenuItem value={"second"}>second</MenuItem>
 
-                      </Select>
-                    </FormControl>
+
+                        </Select>
+                      </FormControl>
                     </Box>
                   </Box>
                 )}
