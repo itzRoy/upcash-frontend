@@ -1,4 +1,4 @@
-import { Button, Container, Dialog, Grid, Paper, Typography } from "@mui/material";
+import { Alert, Button, Container, Dialog, Grid, Paper, Snackbar, Typography } from "@mui/material";
 import NavBar from "../components/Nav/Navbar";
 import SideBar from "../components/SideBar/SideBar";
 import { createRef, useEffect, useState } from "react";
@@ -6,6 +6,7 @@ import TransactionsList from "../components/Transactions components/Transactions
 import CurrentBalance from "../components/Transactions components/CurrentBalance";
 import axios from "axios";
 import AddTransactionFrom from "../components/Transactions components/addTransactionFrom";
+import { green } from "@mui/material/colors";
 
 
 const style = {
@@ -30,7 +31,7 @@ const TransactionPage = (props) => {
   const [categoriesData, setCategoriesData] = useState([])
   const [isLoading, setIsLoading] = useState(true);
   const [openAddDialog, setOpenAddDialog] = useState(false);
-
+  const [openSuccessUpdateAlert, setOpenSuccessUpdateAlert] = useState(false);
 
   //fetch transactions data
   useEffect(
@@ -48,11 +49,8 @@ const TransactionPage = (props) => {
         .then((response) => { setCategoriesData(response.data) })
         .then(() => setIsLoading(false))
         .catch(err => console.log(err));
+    }, []);
 
-    }
-
-
-    , []);
 
 
   //Delete Handler 
@@ -72,7 +70,7 @@ const TransactionPage = (props) => {
       ).then(() => setTransactionsData(newData))
   }
 
-  //Add new Transaction Handler!
+  //======Add new Transaction Handler!
   const handelSubmit = (data) => {
 
     axios.post('transactions', data)
@@ -87,8 +85,29 @@ const TransactionPage = (props) => {
 
   }
 
+  //======update transaction handler
   const handelUpdate = (id, data) => {
-    console.log("id:", id, "data:", data)
+    const newData = {
+      title: data.title,
+      amount: data.amount,
+      note: data.note,
+      category_id: data.category_id,
+      currency_id: data.currency_id,
+      created_at: data.created_at
+    }
+    console.log("newData:", newData)
+    axios.put(`transactions/${id}`, newData)
+      .then(response => {
+        if (response.status == 200) {
+          let index = transactionsData.findIndex(x => x.id === id)
+          const newData = [...transactionsData]
+          newData[index] = data
+          setTransactionsData(newData)
+          setOpenSuccessUpdateAlert(true)
+        }
+      })
+
+      .catch((err) => console.log(err))
   }
 
 
@@ -143,7 +162,18 @@ const TransactionPage = (props) => {
       </Grid>
 
       {/* ========= New Transactions Modal ======== */}
-      <AddTransactionFrom openClose={setOpenAddDialog} open={openAddDialog} categories={categoriesData} submit={handelSubmit} />
+      <AddTransactionFrom openClose={setOpenAddDialog} open={openAddDialog} submit={handelSubmit} />
+
+      {/* ========= Notification ======== */}
+      <Snackbar open={openSuccessUpdateAlert} autoHideDuration={4000} onClose={() => setOpenSuccessUpdateAlert(false)}>
+        <Alert
+          onClose={() => setOpenSuccessUpdateAlert(false)}
+          severity="success"
+          sx={{ width: '100%', color: "white", backgroundColor: green[800] }}
+        >
+          Transaction was successfully Modified!
+        </Alert>
+      </Snackbar>
 
     </>
   );

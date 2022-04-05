@@ -1,5 +1,5 @@
 import { Button, Card, Dialog, DialogActions, DialogContent, DialogContentText, DialogTitle, Typography } from "@mui/material";
-import { green, red } from "@mui/material/colors";
+import { green, grey, red } from "@mui/material/colors";
 import { Box, height, width } from "@mui/system";
 import { DateTime } from "luxon";
 import DeleteIcon from '@mui/icons-material/Delete';
@@ -26,6 +26,7 @@ const style = {
     }
   },
   delete: {
+    transition: '500ms',
     ":hover": {
       color: 'red',
       cursor: 'pointer'
@@ -37,11 +38,16 @@ const style = {
     }
   },
   edit: {
+    paddingX: "15px",
     fontSize: "0.8rem",
     lineHeight: "25px",
     fontWeight: 800,
+    backgroundColor: grey[300],
+    transition: '500ms',
+    overflow: "hidden",
     ":hover": {
-      color: green[800],
+      backgroundColor: green[800],
+      color: "white",
       cursor: 'pointer'
     }
   }
@@ -76,6 +82,8 @@ const TransactionCard = (props) => {
   };
 
 
+
+
   return (
     <>
       <Card
@@ -99,7 +107,7 @@ const TransactionCard = (props) => {
         <Box sx={{ display: 'flex', justifyContent: 'space-between', width: "100%" }}>
 
           {/*=== Note ===*/}
-          <Typography sx={{ flexGrow: 0.99 }} fontSize={'0.8rem'} color={'black'}>Note:{note}</Typography>
+          <Typography sx={{ flexGrow: 1 }} fontSize={'0.8rem'} color={'black'}>Note:{note}</Typography>
 
 
           {/*=== edit icon ===*/}

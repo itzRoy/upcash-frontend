@@ -8,27 +8,25 @@ import axios from 'axios';
 
 function EditTransactionFrom(props) {
     const errorList = { title: false, amount: false, category_id: false, }
-    const [data, setData] = useState(props.data)
-    const [catType, setCatType] = useState(data.category.type)
-    const [categories, setCategories] = useState([])
+    const [data, setData] = useState({ ...props.data, categories: [] })
+    const [oldCat, setOldCat] = useState([])
+    const [catState, seCatState] = useState(true)
     const [errors, setErrors] = useState({ ...errorList })
     const [openErrorAlert, setOpenErrorAlert] = useState(false);
     const [openSuccessAlert, setOpenSuccessAlert] = useState(false);
 
-    //===== reset from to original data on open
-    useEffect(() => {
-        setData(props.data);
-        console.log('hey')
-    }, [props.open])
 
 
     //===== get categories on category type change
     useEffect(() => {
-        axios.get(`income-expense/${catType}`)
-            .then(response => setCategories(response.data))
+        //reset form on open to original data
+        axios.get(`income-expense/${data.category.type}`)
+            .then(response => {
+                setData({ ...data, categories: response.data })
+                if (oldCat.length === 0) setOldCat(response.data)
+            })
             .catch(err => console.log(err))
-        console.log("useEffect:", catType)
-    }, [catType])
+    }, [catState])
 
 
 
@@ -36,7 +34,6 @@ function EditTransactionFrom(props) {
     //********** Snacks *******
     const showAlert = (event) => {
         if (event === "error") setOpenErrorAlert(true);
-        if (event === "success") setOpenSuccessAlert(true);
 
     };
 
@@ -54,9 +51,10 @@ function EditTransactionFrom(props) {
     //===== handling changing category type =================
     const handelCatTypeChange = (event) => {
         const value = event.target.value
+        // trigger useEffect on category change 
+        seCatState(!catState)
         // reset category_id after changing category type
-        setData({ ...data, category_id: "" })
-        setCatType(value)
+        setData({ ...data, category_id: "", category: { ...data.category, type: value } })
     }
 
     //=====# handel change from add transaction page and save them in state ====
@@ -119,10 +117,11 @@ function EditTransactionFrom(props) {
     };
 
     //======# Handel Modal close and clear form data ========
-    const handelClose = () => {
+    const handelClose = async () => {
         props.openClose(false);
         setErrors({ ...errorList })
         setOpenErrorAlert(false)
+        setData({ ...props.data, categories: oldCat })
     }
 
 
@@ -199,7 +198,7 @@ function EditTransactionFrom(props) {
                                     select
                                     required
                                     name="expense-type"
-                                    value={catType}
+                                    value={data.category.type}
                                     label="Transaction Type"
                                     onChange={e => handelCatTypeChange(e)}
                                 >
@@ -225,7 +224,7 @@ function EditTransactionFrom(props) {
                                     onChange={e => handelChange(e)}
                                 >
 
-                                    {categories.map((item) => {
+                                    {data.categories.map((item) => {
                                         return <MenuItem key={item.id} value={item.id}>{item.name}</MenuItem>
                                     })}
 
@@ -287,15 +286,7 @@ function EditTransactionFrom(props) {
                 </Alert>
             </Snackbar>
 
-            <Snackbar open={openSuccessAlert} autoHideDuration={4000} onClose={closeAlert}>
-                <Alert
-                    onClose={closeAlert}
-                    severity="success"
-                    sx={{ width: '100%', color: "white", backgroundColor: green[800] }}
-                >
-                    Transaction was successfully created
-                </Alert>
-            </Snackbar>
+
         </>
     )
 }

@@ -5,9 +5,7 @@ import TransactionCard from "./TransactionCard";
 function TransactionsList(props) {
   //========- states -=========//
 
-  console.log("list:", props)
   let data = props.transactions.length
-
   return (
 
     <Paper
