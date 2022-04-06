@@ -46,6 +46,8 @@ function EditTransactionFrom(props) {
     };
 
 
+
+
     // =========================================================================
 
     //===== handling changing category type =================

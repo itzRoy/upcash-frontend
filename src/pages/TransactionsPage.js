@@ -40,13 +40,7 @@ const TransactionPage = (props) => {
 
       //get all transactions
       axios.get("transactions")
-        .then((response) => { setTransactionsData(response.data.Data) })
-        .catch(err => console.log(err));
-
-
-      // get all Categories
-      axios.get("categories")
-        .then((response) => { setCategoriesData(response.data) })
+        .then((response) => { setTransactionsData(response.data.Data.reverse()) })
         .then(() => setIsLoading(false))
         .catch(err => console.log(err));
     }, []);
