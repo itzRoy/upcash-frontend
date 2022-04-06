@@ -30,13 +30,13 @@ const NavBar = (props) => {
             name="test"
             onClick={() => {
               Swal.fire({
-                title: 'Are you sure? You want to delete this Admin',
+                title: 'Confirm',
 
                 icon: 'warning',
                 showCancelButton: true,
-                confirmButtonColor: '#3085d6',
-                cancelButtonColor: '#d33',
-                confirmButtonText: 'Yes, delete it!'
+                confirmButtonColor: '#008a47',
+                cancelButtonColor: '#d32f2f',
+                confirmButtonText: 'Log out'
               }).then((result) => {
                 if (result.isConfirmed) {
                   localStorage.clear();
