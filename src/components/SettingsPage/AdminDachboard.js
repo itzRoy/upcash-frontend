@@ -1,7 +1,7 @@
 import React, { useState, useEffect, Fragment } from 'react';
 import axios from 'axios';
-import AdminDachboardReadonly from '../components/adminDachboardReadonly';
-import AdminDachboardEdit from '../components/AdminDachboardEdit';
+import AdminDachboardReadonly from './adminDachboardReadonly';
+import AdminDachboardEdit from './AdminDachboardEdit';
 import Swal from "sweetalert2";
 import { Table, TableCell, TableHead, TableRow, TextField, Button, Grid, Container, Stack } from '@mui/material';
 

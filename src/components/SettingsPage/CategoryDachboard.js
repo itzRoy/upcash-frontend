@@ -1,7 +1,7 @@
 import React, { useState, useEffect, Fragment } from 'react';
 import axios from 'axios';
-import CategoryDachboardEdit from '../components/CategoryDachboardEdit';
-import CategoryDachboardReadonly from '../components/CategoryDachboardReadonly';
+import CategoryDachboardEdit from './CategoryDachboardEdit';
+import CategoryDachboardReadonly from './CategoryDachboardReadonly';
 import Swal from "sweetalert2";
 import { Table, TableCell, TableHead, TableRow, TextField, Button, Grid, Container, Stack, RadioGroup, FormControlLabel, Radio } from '@mui/material';
 

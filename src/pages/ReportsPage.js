@@ -9,7 +9,6 @@ import TextField from '@mui/material/TextField';
 import MobileDateRangePicker from '@mui/lab/MobileDateRangePicker';
 import AdapterDateFns from '@mui/lab/AdapterDateFns';
 import LocalizationProvider from '@mui/lab/LocalizationProvider';
-import { minWidth } from "@mui/system";
 
 
 const ReportsPage = (props) => {
@@ -230,7 +229,6 @@ const style = {
                         <Select
                         px={0}
                           id="demo-simple-select"
-                          adding                       value={dropdown}
                           label="Per"
                           onChange={handleChange}
                         >
