@@ -42,6 +42,11 @@ const TransactionPage = (props) => {
       .then(response => setTransactionsData(response.data.Data.reverse()))
       .then(() => setIsLoading(false))
       .catch(err => console.log(err));
+    axios.get("categories")
+      .then(response => setCategories(response.data))
+      .then(() => setIsLoading(false))
+      .catch(err => console.log(err));
+
   }, [])
 
   useEffect(() => {
@@ -90,7 +95,6 @@ const TransactionPage = (props) => {
       currency_id: data.currency_id,
       created_at: data.created_at
     }
-    console.log("newData:", newData)
     axios.put(`transactions/${id}`, newData)
       .then(response => {
         if (response.status == 200) {
@@ -107,10 +111,7 @@ const TransactionPage = (props) => {
 
   //======filter data by selected time range
   const setDataRange = (range) => {
-    console.log(range)
-    console.log('running')
     let luxonDate = DateTime.fromISO(transactionsData[0].created_at)
-    // console.log(luxonDate)
     let dt = DateTime.now();
     let rangeStart = dt.startOf(range)
     let rangeEnd = dt.endOf(range)
@@ -163,6 +164,7 @@ const TransactionPage = (props) => {
                 >
                   <TransactionsList
                     range={range} setRange={setRange}
+                    categories={categories}
                     transactions={filteredData} delete={handelDelete} update={handelUpdate} />
                 </Grid>
 

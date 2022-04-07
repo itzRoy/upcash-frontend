@@ -45,7 +45,7 @@ function TransactionsList(props) {
     >
 
       <Box sx={style.titleBox}>
-        <Typography sx={style.title} variant={"h6"} color={'primary'}>Transaction</Typography>
+        <Typography sx={style.title} variant={"h6"} color={'primary'}>Transactions</Typography>
 
         <Box sx={style.rangeBox}>
           <Button onClick={getRange} variant={props.range === "day" ? "contained" : "outlined"} size="small" name="today" value="day">Today</Button>
@@ -63,9 +63,9 @@ function TransactionsList(props) {
           <List style={{ height: "100%", overflowY: "auto" }}>
             {props.transactions.map(data => { return <TransactionCard key={data.id} transaction={data} delete={props.delete} update={props.update} /> })}
           </List>
-          : <Typography>No Data</Typography>
+          : <Typography variant={'h5'}>No Data</Typography>
       }
-    </Paper >
+    </Paper>
   );
 }
 
