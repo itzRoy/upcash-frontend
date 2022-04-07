@@ -50,142 +50,153 @@ const ProfitGoalPage = (props) => {
 
     axios.get("profit-goals")
       .then(res => setProfitGoals(res.data))
-      .then(()=> {
-        if(profitGoals && !profitGoals.some(i=> new Date(i.year).getFullYear() == new Date().getFullYear() && new Date(i.year).getMonth() == new Date().getMonth() +1)){
-          axios.post(`profit-goals?name=${months[new Date().getMonth()]}&amount=0&year=${new Date().getFullYear()}-0${new Date().getMonth()+1}-01`)
-        }else{
+      .then(() => {
+        if (profitGoals && !profitGoals.some(i => new Date(i.year).getFullYear() == new Date().getFullYear() && new Date(i.year).getMonth() == new Date().getMonth() + 1)) {
+          axios.post(`profit-goals?name=${months[new Date().getMonth()]}&amount=0&year=${new Date().getFullYear()}-0${new Date().getMonth() + 1}-01`)
+        } else {
           console.log("hi");
         }
       })
-    
-        axios.get("transactions")
-          .then(response => setTransactions(response.data.Data))
+
+    axios.get("transactions")
+      .then(response => setTransactions(response.data.Data))
 
 
-          
-        
-      }, [])
-
-// console.log(new Date().getMonth());
-//       console.log(profitGoals.some(i=> new Date(i.year).getFullYear == new Date().getFullYear && new Date(i.year).getMonth() == new Date().getMonth() ));
-
-// console.log(isLoading && profitGoals.some(i=> new Date(i.year).getFullYear == new Date().getFullYear && new Date(i.year).getMonth() == new Date().getMonth() ))
-// if(isLoading  && !profitGoals.some(i=> new Date(i.year).getFullYear == new Date().getFullYear && new Date(i.year).getMonth() == new Date().getMonth()+1 )){
-//   axios.post(`profit-goals?name=${months[new Date().getMonth()]}&amount=0&year=${new Date().getFullYear()}-0${new Date().getMonth()+1}-01`)
-
-// }else{
-//   console.log("hello")
-
-// }
-
-    const income = transactions.filter(i => {
-      return (i.category.type == "income" && new Date(i["created_at"]).getMonth() === new Date().getMonth())
-    }).reduce((total, current) => { return total += current.amount }, 0).toFixed(2)
 
 
-    const expense = (transactions.filter(i => {
-      return (i.category.type == "expense" && new Date(i["created_at"]).getMonth() === new Date().getMonth())
-    }).reduce((total, current) => { return total += current.amount }, 0) * -1).toFixed(2)
+  }, [])
 
-    const balance = parseInt(income) + parseInt(expense);
+  // console.log(new Date().getMonth());
+  //       console.log(profitGoals.some(i=> new Date(i.year).getFullYear == new Date().getFullYear && new Date(i.year).getMonth() == new Date().getMonth() ));
 
-    const percentage = balance * 100 / parseInt(amount)
+  // console.log(isLoading && profitGoals.some(i=> new Date(i.year).getFullYear == new Date().getFullYear && new Date(i.year).getMonth() == new Date().getMonth() ))
+  // if(isLoading  && !profitGoals.some(i=> new Date(i.year).getFullYear == new Date().getFullYear && new Date(i.year).getMonth() == new Date().getMonth()+1 )){
+  //   axios.post(`profit-goals?name=${months[new Date().getMonth()]}&amount=0&year=${new Date().getFullYear()}-0${new Date().getMonth()+1}-01`)
 
-    const handleChange = (e) => {
-      e.preventDefault();
-      setAmount(e.target.value)
-      console.log(amount);
-    }
+  // }else{
+  //   console.log("hello")
+
+  // }
+
+  const income = transactions.filter(i => {
+    return (i.category.type == "income" && new Date(i["created_at"]).getMonth() === new Date().getMonth())
+  }).reduce((total, current) => { return total += current.amount }, 0).toFixed(2)
 
 
-    return (
-     profitGoals.length ? <>
-        <NavBar admin={localStorage.getItem('admin')} />
-        <Grid maxWidth="xl" height="100vh" container>
-          <Grid item>
-            <SideBar />
-          </Grid>
+  const expense = (transactions.filter(i => {
+    return (i.category.type == "expense" && new Date(i["created_at"]).getMonth() === new Date().getMonth())
+  }).reduce((total, current) => { return total += current.amount }, 0) * -1).toFixed(2)
 
-          <Grid
-            item
-            sx={style.main}
-            component={"main"}
-          >
+  const balance = parseInt(income) + parseInt(expense);
+
+  const percentage = balance * 100 / parseInt(amount);
+
+  const lastDayOfYear = new Date(new Date().getFullYear(), 11, 31)
+
+
+  const diffInMs = new Date(lastDayOfYear) - new Date(new Date())
+
+  const diffInDays = diffInMs / (1000 * 60 * 60 * 24);
+
+ const estimation = ((amount - balance) / diffInDays).toFixed()
+
+  const handleChange = (e) => {
+    e.preventDefault();
+    setAmount(e.target.value)
+    console.log(amount);
+  }
+
+
+  return (
+    profitGoals.length ? <>
+      <NavBar admin={localStorage.getItem('admin')} />
+      <Grid maxWidth="xl" height="100vh" container>
+        <Grid item>
+          <SideBar />
+        </Grid>
+
+        <Grid
+          item
+          sx={style.main}
+          component={"main"}
+        >
+          <Paper
+            style={{ height: "calc(100vh - 84px)" }}
+            sx={{ p: { md: '20px' }, overflowY: 'auto' }}
+            name="mainContainer">
             <Paper
-              style={{ height: "calc(100vh - 84px)" }}
-              sx={{ p: { md: '20px' }, overflowY: 'auto' }}
-              name="mainContainer">
-              <Paper
-                sx={{
-                  height: "100%",
-                  backgroundColor: 'rgb(231, 235, 240)',
-                  padding: "10px",
-                  pb: "30px",
-                  overflow: "hidden",
-                }}
-                elevation={1}
-              >
+              sx={{
+                height: "100%",
+                backgroundColor: 'rgb(231, 235, 240)',
+                padding: "10px",
+                pb: "30px",
+                overflow: "hidden",
+              }}
+              elevation={1}
+            >
 
-                <Box m={3}>
-                  <Box>
-                    <Card sx={{
-                      width: 'auto',
-                      height: "auto",
-                      padding: "10px",
-                    }}>
+              <Box m={3}>
+                <Box>
+                  <Card sx={{
+                    width: 'auto',
+                    height: "auto",
+                    padding: "10px",
+                  }}>
 
-                      <Box display={"flex"} justifyContent={"center"} alignItems={"center"}>
-                        <Typography display={"block"} textAlign={"center"} variant='h6' color="primary">{`Current Goal: `}</Typography>
-                        <TextField
-                          id="filled-start-adornment"
-                          sx={{ m: 1, display: "block", maxWidth: "100px" }}
-                          InputProps={{
-                            endAdornment: <InputAdornment position='start'><Typography>$</Typography></InputAdornment>,
-                          }}
-                          value={amount}
-                          onChange={handleChange}
-                          type={"number"}
-                          size="small"
-                          variant="standard"
-                          px={0}
-                        />
-                        <Typography display={"block"} textAlign={"center"} variant='h6' color="primary">{` for ${currentMonth} ${new Date().getFullYear()}`}</Typography>
+                    <Box display={"flex"} justifyContent={"center"} alignItems={"center"}>
+                      <Typography display={"block"} textAlign={"center"} variant='h6' color="primary">{`Current Goal: `}</Typography>
+                      <TextField
+                        id="filled-start-adornment"
+                        sx={{ m: 1, display: "block", maxWidth: "100px" }}
+                        InputProps={{
+                          endAdornment: <InputAdornment position='start'><Typography>$</Typography></InputAdornment>,
+                        }}
+                        value={amount}
+                        onChange={handleChange}
+                        type={"number"}
+                        size="small"
+                        variant="standard"
+                        px={0}
+                      />
+                      <Typography display={"block"} textAlign={"center"} variant='h6' color="primary">{` for ${new Date().getFullYear()}`}</Typography>
 
-                      </Box>
-                      <Divider />
-                      <Box mt={'10px'} display={'flex'}>
-                        <Typography flexGrow={1}>income:</Typography>
-                        <Typography color={green[700]}>{income}$</Typography>
-                      </Box>
+                    </Box>
+                    <Divider />
+                    <Box mt={'10px'} display={'flex'} >
+                      <Typography flexGrow={1}>income:</Typography>
+                      <Typography color={green[700]}>{income}$</Typography>
+                    </Box>
 
-                      <Box display={'flex'} my={'10px'}>
-                        <Typography flexGrow={1}>expense:</Typography>
-                        <Typography color={red[700]}>{expense}$</Typography>
-                      </Box>
-                      <Box display={'flex'} justifyContent={'right'}>
+                    <Box display={'flex'} my={'10px'}>
+                      <Typography flexGrow={1}>expense:</Typography>
+                      <Typography color={red[700]}>{expense}$</Typography>
+                    </Box>
+                    <Box display={'flex'} justifyContent={'right'}>
                       <Typography flexGrow={1}>balance:</Typography>
-                        <Typography variant='h6' color={balance > 0 ? green[700] : red[700]}>{`${balance}`}$</Typography>
-                      </Box>
-                      <Divider xs={{ mb: "2rem" }}>Progress</Divider>
-                      <ProgressBar completed={parseInt(percentage)} />
-                    </Card >
-                  </Box>
+                      <Typography variant='h6' color={balance > 0 ? green[700] : red[700]}>{`${balance}`}$</Typography>
+                    </Box>
+                    <Divider xs={{ mb: "2rem" }}>Progress</Divider>
+                    <ProgressBar completed={parseInt(percentage)} />
+                    <Typography mt={2} display={"block"} textAlign={"center"} variant='body1' color="primary">{`estimation: you have to earn ${estimation}$ per day in order to achieve your ${new Date().getFullYear()}  goal`}</Typography>
 
-
+                  </Card >
                 </Box>
 
-             
 
-                <List style={{ height: "100%", overflowY: "auto" }}>
-                </List>
-                : <Typography>No Data</Typography>
+              </Box>
 
-              </Paper>
+
+
+              <List style={{ height: "100%", overflowY: "auto" }}>
+              </List>
+              : <Typography>No Data</Typography>
+
             </Paper>
-          </Grid>
+          </Paper>
         </Grid>
-      </>: <h2></h2>
-    ) 
-  };
+      </Grid>
+    </> : <h2></h2>
+  )
+};
 
-  export default ProfitGoalPage;
+export default ProfitGoalPage;
