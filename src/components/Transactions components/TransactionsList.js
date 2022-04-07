@@ -5,9 +5,7 @@ import TransactionCard from "./TransactionCard";
 function TransactionsList(props) {
   //========- states -=========//
 
-
   let data = props.transactions.length
-
   return (
 
     <Paper
@@ -27,7 +25,7 @@ function TransactionsList(props) {
 
       {data ?
         <List style={{ height: "100%", overflowY: "auto" }}>
-          {props.transactions.map(data => { return <TransactionCard key={data.id} transaction={data} delete={props.delete} /> })}
+          {props.transactions.map(data => { return <TransactionCard key={data.id} transaction={data} delete={props.delete} update={props.update} /> })}
         </List>
         : <Typography>No Data</Typography>
       }

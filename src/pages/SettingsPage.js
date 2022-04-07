@@ -21,15 +21,15 @@ const SettingsPage = () => {
   if (settingPage.showbtn === false) page = <AdminDachboard />;
 
   return (
-    <div style={{ textAlign: "center"}} >
-                
-      <ButtonGroup variant="contained" aria-label="outlined primary button group"  style={{ width: "100%"}}>
-        <Button style={{ width: "33%"}} onClick={() => { navigate("/transactions"); }}>Home</Button>
-        <Button style={{ width: "33%"}} onClick={handleCat}>Categories</Button>
-        <Button style={{ width: "33%"}} onClick={handleAdmin}>Admins</Button>
+    <div style={{ textAlign: "center" }} >
+
+      <ButtonGroup variant="contained" aria-label="outlined primary button group" style={{ width: "100%" }}>
+        <Button style={{ width: "33%" }} onClick={() => { navigate("/transactions"); }}>Home</Button>
+        <Button style={{ width: "33%" }} onClick={handleCat}>Categories</Button>
+        <Button style={{ width: "33%" }} onClick={handleAdmin}>Admins</Button>
       </ButtonGroup>
-   
-    
+
+
       {page}
 
     </div>

@@ -6,38 +6,34 @@ import React, { useEffect, useRef, useState } from 'react';
 import { DateTime } from 'luxon';
 import axios from 'axios';
 
-function AddTransactionFrom(props) {
-    const defaultValue = { title: "", amount: "", note: "", category_id: "", currency_id: 1, created_at: DateTime.now(), }
+function EditTransactionFrom(props) {
     const errorList = { title: false, amount: false, category_id: false, }
-    const [data, setData] = useState({ ...defaultValue })
-    const [catType, setCatType] = useState('expense')
-    const [categories, setCategories] = useState([])
+    const [data, setData] = useState({ ...props.data, categories: [] })
+    const [oldCat, setOldCat] = useState([])
+    const [catState, seCatState] = useState(true)
     const [errors, setErrors] = useState({ ...errorList })
     const [openErrorAlert, setOpenErrorAlert] = useState(false);
     const [openSuccessAlert, setOpenSuccessAlert] = useState(false);
 
 
-    //===== reset form 
-    useEffect(() => {
-        setCatType("expense")
-        setData({ ...defaultValue })
-        setErrors({ ...errorList })
-        setOpenErrorAlert(false)
-    }, [props.open])
 
     //===== get categories on category type change
     useEffect(() => {
-        axios.get(`income-expense/${catType}`)
-            .then(response => setCategories(response.data))
+        //reset form on open to original data
+        axios.get(`income-expense/${data.category.type}`)
+            .then(response => {
+                setData({ ...data, categories: response.data })
+                if (oldCat.length === 0) setOldCat(response.data)
+            })
             .catch(err => console.log(err))
-    }, [catType])
+    }, [catState])
+
 
 
 
     //********** Snacks *******
     const showAlert = (event) => {
         if (event === "error") setOpenErrorAlert(true);
-        if (event === "success") setOpenSuccessAlert(true);
 
     };
 
@@ -55,9 +51,10 @@ function AddTransactionFrom(props) {
     //===== handling changing category type =================
     const handelCatTypeChange = (event) => {
         const value = event.target.value
+        // trigger useEffect on category change 
+        seCatState(!catState)
         // reset category_id after changing category type
-        setData({ ...data, category_id: "" })
-        setCatType(value)
+        setData({ ...data, category_id: "", category: { ...data.category, type: value } })
     }
 
     //=====# handel change from add transaction page and save them in state ====
@@ -75,11 +72,10 @@ function AddTransactionFrom(props) {
 
 
     // ======== handling From Submit after Validation using handel error function ====
-    const handelSubmit = () => {
+    const handelUpdate = () => {
         if (!checkErrors(data)) {
-            props.submit(data);
+            props.update(data.id, data);
             props.openClose(false);
-            setData({ ...defaultValue })
             showAlert("success")
         }
         else showAlert("error")
@@ -121,8 +117,11 @@ function AddTransactionFrom(props) {
     };
 
     //======# Handel Modal close and clear form data ========
-    const handelClose = () => {
+    const handelClose = async () => {
         props.openClose(false);
+        setErrors({ ...errorList })
+        setOpenErrorAlert(false)
+        setData({ ...props.data, categories: oldCat })
     }
 
 
@@ -139,8 +138,8 @@ function AddTransactionFrom(props) {
                 onClose={() => props.openClose(false)}
             >
 
-                <DialogTitle color={green[700]} id="responsive-dialog-title">
-                    {"Add a new transaction"}
+                <DialogTitle color={green[700]} id="edit-transaction-dialog">
+                    {"Edit transaction"}
                 </DialogTitle>
 
                 <DialogContent>
@@ -168,6 +167,7 @@ function AddTransactionFrom(props) {
                                     label="amount"
                                     name="amount"
                                     type="number"
+                                    value={data.amount}
                                     error={errors.amount}
                                     helperText={errors.amount ? "amount is Required" : ""}
                                     onChange={e => handelChange(e)} />
@@ -198,7 +198,7 @@ function AddTransactionFrom(props) {
                                     select
                                     required
                                     name="expense-type"
-                                    defaultValue={"expense"}
+                                    value={data.category.type}
                                     label="Transaction Type"
                                     onChange={e => handelCatTypeChange(e)}
                                 >
@@ -224,7 +224,7 @@ function AddTransactionFrom(props) {
                                     onChange={e => handelChange(e)}
                                 >
 
-                                    {categories.map((item) => {
+                                    {data.categories.map((item) => {
                                         return <MenuItem key={item.id} value={item.id}>{item.name}</MenuItem>
                                     })}
 
@@ -235,7 +235,7 @@ function AddTransactionFrom(props) {
 
                         {/*====== Note ================================ */}
                         <FormControl margin="normal">
-                            <TextField label="note" name="note"
+                            <TextField label="note" name="note" value={data.note || ""}
                                 onChange={e => handelChange(e)}></TextField>
                         </FormControl>
 
@@ -263,10 +263,10 @@ function AddTransactionFrom(props) {
 
                 <DialogActions>
                     <Button autoFocus color="error" onClick={handelClose} >
-                        cancel
+                        Cancel
                     </Button>
-                    <Button onClick={handelSubmit} type="submit" variant="contained" color="success" autoFocus>
-                        Add transaction
+                    <Button onClick={handelUpdate} type="submit" variant="contained" color="success" autoFocus>
+                        Save
                     </Button>
 
                 </DialogActions>
@@ -286,17 +286,9 @@ function AddTransactionFrom(props) {
                 </Alert>
             </Snackbar>
 
-            <Snackbar open={openSuccessAlert} autoHideDuration={4000} onClose={closeAlert}>
-                <Alert
-                    onClose={closeAlert}
-                    severity="success"
-                    sx={{ width: '100%', color: "white", backgroundColor: green[800] }}
-                >
-                    Transaction was successfully created
-                </Alert>
-            </Snackbar>
+
         </>
     )
 }
 
-export default AddTransactionFrom
+export default EditTransactionFrom
