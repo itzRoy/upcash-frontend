@@ -10,7 +10,7 @@ function EditTransactionFrom(props) {
     const errorList = { title: false, amount: false, category_id: false, }
     const [data, setData] = useState({ ...props.data, categories: [] })
     const [oldCat, setOldCat] = useState([])
-    const [catState, seCatState] = useState(true)
+    const [catState, setCatState] = useState(true)
     const [errors, setErrors] = useState({ ...errorList })
     const [openErrorAlert, setOpenErrorAlert] = useState(false);
     const [openSuccessAlert, setOpenSuccessAlert] = useState(false);
@@ -20,6 +20,7 @@ function EditTransactionFrom(props) {
     //===== get categories on category type change
     useEffect(() => {
         //reset form on open to original data
+        console.log('edit run')
         axios.get(`income-expense/${data.category.type}`)
             .then(response => {
                 setData({ ...data, categories: response.data })
@@ -54,7 +55,7 @@ function EditTransactionFrom(props) {
     const handelCatTypeChange = (event) => {
         const value = event.target.value
         // trigger useEffect on category change 
-        seCatState(!catState)
+        setCatState(!catState)
         // reset category_id after changing category type
         setData({ ...data, category_id: "", category: { ...data.category, type: value } })
     }

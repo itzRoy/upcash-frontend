@@ -19,6 +19,7 @@ function AddTransactionFrom(props) {
 
     //===== reset form 
     useEffect(() => {
+        console.log('add run')
         setCatType("expense")
         setData({ ...defaultValue })
         setErrors({ ...errorList })
@@ -141,6 +142,7 @@ function AddTransactionFrom(props) {
 
                 <DialogTitle color={green[700]} id="responsive-dialog-title">
                     {"Add a new transaction"}
+
                 </DialogTitle>
 
                 <DialogContent>
