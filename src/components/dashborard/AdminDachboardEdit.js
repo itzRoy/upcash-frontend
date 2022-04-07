@@ -1,49 +1,49 @@
 import React from 'react';
-import { TableBody, TableCell, TableRow, Grid } from '@mui/material';
+import { TableBody, TableCell, TableRow, TextField } from '@mui/material';
 import ClearIcon from '@mui/icons-material/Clear';
 import SaveIcon from '@mui/icons-material/Save';
 const AdminDachboardEdit = (props) => {
+
+    const style = ({
+        saveButton: {
+            color: "black",
+            '&:hover': {
+                color: "green"
+            },
+        },
+        cancelButton: {
+            color: "black",
+            '&:hover': {
+                color: "red"
+            },
+        },
+    });
+
     return (
         <TableBody>
-
-            <TableRow
-                sx={{ '&:last-child td, &:last-child th': { border: 0 } }}
-            >
-                <Grid container>
-                    <Grid item xs={3}>
+            <TableRow sx={{ '&:last-child td, &:last-child th': { border: 0 } }}>
                         <TableCell >{props.data.id}</TableCell>
-                    </Grid>
-                    <Grid item xs={3}>
                         <TableCell >
-                            <input type='text'
+                            <TextField type='text'
                                 name='username'
                                 defaultValue={props.data.username}
                                 onChange={props.changeData}
                                 required
-                            ></input>
+                            />
                         </TableCell>
-                    </Grid>
-                    <Grid item xs={3}>
                         <TableCell >
-                            <input type='text'
+                            <TextField type='text'
                                 name='password'
-                                defaultValue={props.data.password}
                                 onChange={props.changeData}
                                 required
-                            ></input>
+                            />
                         </TableCell>
-                    </Grid>
-                    <Grid item xs={3}>
                         <TableCell>
-                            <ClearIcon style={{ color: "yellow"}} onClick={props.cancel} />
-                            <SaveIcon style={{ color: "white"}} onClick={props.save} />
+                            <ClearIcon sx={style.cancelButton} onClick={props.cancel} />
+                            <SaveIcon sx={style.saveButton} onClick={props.save} />
                         </TableCell>
-                    </Grid>
-                </Grid>
             </TableRow>
-
         </TableBody>
     );
 };
-
 export default AdminDachboardEdit;
