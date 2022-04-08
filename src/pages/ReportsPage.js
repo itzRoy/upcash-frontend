@@ -1,4 +1,4 @@
-import { Container, Grid, Paper, Box } from "@mui/material";
+import { Container, Grid, Paper, Box, InputLabel, MenuItem, FormControl, Select } from "@mui/material";
 import NavBar from "../components/Nav/Navbar";
 import SideBar from "../components/SideBar/SideBar";
 import { createRef, useEffect, useState } from "react";
@@ -10,14 +10,6 @@ import MobileDateRangePicker from '@mui/lab/MobileDateRangePicker';
 import AdapterDateFns from '@mui/lab/AdapterDateFns';
 import LocalizationProvider from '@mui/lab/LocalizationProvider';
 
-const style = {
-  main: {
-    height: "xl",
-    mt: "74px",
-    mb: "10px",
-    mr: "10px"
-  }
-}
 
 const ReportsPage = (props) => {
   const NavRef = createRef();
@@ -27,6 +19,10 @@ const ReportsPage = (props) => {
   const [categorie, setCategorie] = useState([]);
   const [transactions, setTransactions] = useState([])
   const [value, setValue] = useState(['', ''])
+  const [dropdown, setDropdown] = useState('day');
+  const [minDate, setMinDate] = useState(new Date(-8640000000000000));
+  const [maxDate, setMaxDate] = useState(new Date(8640000000000000));
+
 
   useEffect(
     () => {
@@ -42,45 +38,78 @@ const ReportsPage = (props) => {
 
       axios.get("transactions")
         .then(response => setTransactions(response.data.Data))
+      axios.get("transactions").then((response) => {
+        const minD = (response.data.Data).reduce((acc, current) => new Date(acc).getTime() > new Date(current["created_at"]).getTime() ? acc = new Date(current["created_at"]) : acc, maxDate)
+        const maxD = (response.data.Data).reduce((acc, current) => new Date(acc).getTime() < new Date(current["created_at"]).getTime() ? acc = new Date(current["created_at"]) : acc, minDate)
 
-      setValue(["Wed Jan 01 2020 00:00:00 GMT+0200 (Eastern European Standard Time)", "Sun Jan 01 2023 00:00:00 GMT+0200 (Eastern European Standard Time)"])
+        setMinDate(new Date(minD).getTime())
+        setMaxDate(new Date(maxD).getTime())
+        setValue([new Date(minD), new Date(maxD)])
+      })
 
     }, []);
 
-
-
-
+  const handleChange = (event) => {
+    setDropdown(event.target.value);
+  }
 
 
   //format date for one item (string)
   const getDateItem = (item) => {
     let date_ob = new Date(item)
+    let year = date_ob.getFullYear();
     let month = (date_ob.toLocaleString('en-us', { month: 'short' }));
     let date = ("0" + date_ob.getDate()).slice(-2);
     let hours = date_ob.getHours();
     let minutes = date_ob.getMinutes();
     let seconds = date_ob.getSeconds();
 
-    return month + "-" + date + "H" + hours + ":" + minutes
-    // + ":" + seconds;
+    if (dropdown === "day") {
+      return month + "-" + date;
+    } else if (dropdown == "year") {
+      return year
+    } else if (dropdown == "hour") {
+      return month + "-" + date + "H" + hours
+    } else if (dropdown === "minute") {
+      return month + "-" + date + "H" + hours + ":" + minutes
+    } else if (dropdown === "second") {
+      return month + "-" + date + "H" + hours + ":" + minutes + ":" + seconds
+    }
+    else return month
   }
 
 
   // format date based on array of objects with "created_at" value
   const getDateArray = (input) => {
-    const array = input.filter(i => new Date(i["created_at"]).getTime() >= new Date(value[0]).getTime() - 1 && new Date(i["created_at"]).getTime() <= new Date(value[1]).getTime() + 1).sort((a, b) => (a["created_at"] > b["created_at"]) ? 1 : ((b["created_at"] > a["created_at"]) ? -1 : 0))
-    const arr = array.map(item => {
-      let date_ob = new Date(item["created_at"])
-      let month = (date_ob.toLocaleString('en-us', { month: 'short' }));
-      let date = ("0" + date_ob.getDate()).slice(-2);
-      let hours = date_ob.getHours();
-      let minutes = date_ob.getMinutes();
-      let seconds = date_ob.getSeconds();
+    if (value[0] && value[1]) {
+      const array = input.filter(i => new Date(i["created_at"]).getTime() >= new Date(value[0]).getTime() && new Date(i["created_at"]).getTime() - 86400000 <= new Date(value[1].getTime() || new Date(maxDate)))
+        .sort((a, b) => (a["created_at"] > b["created_at"]) ? 1 : ((b["created_at"] > a["created_at"]) ? -1 : 0))
+      const arr = array.map(item => {
+        let date_ob = new Date(item["created_at"])
+        let year = date_ob.getFullYear();
+        let month = (date_ob.toLocaleString('en-us', { month: 'short' }));
+        let date = ("0" + date_ob.getDate()).slice(-2);
+        let hours = date_ob.getHours();
+        let minutes = date_ob.getMinutes();
+        let seconds = date_ob.getSeconds();
 
-      return month + "-" + date + "H" + hours + ":" + minutes
-      // + ":" + seconds;
-    })
-    return arr;
+        if (dropdown === "day") {
+          return month + "-" + date;
+        } else if (dropdown == "year") {
+          return year
+        } else if (dropdown == "hour") {
+          return month + "-" + date + "H" + hours
+        } else if (dropdown === "minute") {
+          return month + "-" + date + "H" + hours + ":" + minutes
+        } else if (dropdown === "second") {
+          return month + "-" + date + "H" + hours + ":" + minutes + ":" + seconds
+        }
+        else return month
+
+      })
+      return arr;
+    } return
+
   }
 
   // lables for line chart
@@ -132,7 +161,7 @@ const ReportsPage = (props) => {
   //getValues income pie
   const pieValues = (arr) => {
     const filtered = arr.map(
-      x => transactions.filter(item => item.category.name == x && new Date(item["created_at"]).getTime() >= new Date(value[0]).getTime() - 1 && new Date(item["created_at"]).getTime() <= new Date(value[1]).getTime() + 1))
+      x => transactions.filter(item => item.category.name == x && new Date(item["created_at"]).getTime() >= new Date(value[0]).getTime() && new Date(item["created_at"]).getTime() - 86400000 <= new Date(value[1]).getTime() + 1))
     const reduced = filtered.map(i => {
       if (i.length > 0) {
         return i.reduce((total, current) => { return total += current.amount }, 0)
@@ -143,31 +172,42 @@ const ReportsPage = (props) => {
 
 
 
+const style = {
+  main: {
+    mt: "74px",
+    mb: "10px",
+    mr: "10px",
+    minWidth: "100px",
+    flexGrow: 1
+  }
+}
+
 
   return (
 
     <>
       <NavBar admin={localStorage.getItem('admin')} />
-      <Grid maxWidth="xl" height="100vh" container>
-        <Grid item>
+      <Box display={"flex"} maxWidth="xl" height="100vh" container>
+        
           <SideBar />
-        </Grid>
+        
 
-        <Grid
-          item
-          xs
+        <Box
+         
           sx={style.main}
           component={"main"}
         >
           <Paper
             style={{ height: "calc(100vh - 84px)" }}
-            xs
-            sx={{ p: '20px', overflowY: 'auto' }}
+            
+            sx={{ overflowY: 'auto',  overflowX: 'hidden', maxWidth: "100%", padding: "20px" }}
             name="mainContainer">
 
             {/* localization time picker from mui */}
             <LocalizationProvider dateAdapter={AdapterDateFns}>
               <MobileDateRangePicker
+                minDate={new Date(minDate).getTime()}
+                maxDate={new Date(maxDate).getTime()}
                 style={{ 'margin': '0 auto', 'textAlign': 'center' }}
                 startText="start"
                 endText="end"
@@ -179,30 +219,51 @@ const ReportsPage = (props) => {
                 renderInput={(startProps, endProps) => (
                   <Box width={"100%"} display={"flex"} justifyContent={"center"} alignItems={"center"}>
 
-                    <TextField {...startProps} />
-                    <Box sx={{ mx: 2, height: "1rem" }}> to </Box>
+                    <TextField {...startProps} sx={{px: 0}}/>
+                    <Box sx={{ px: 0, mx: 2, height: "0.5rem" }}> to </Box>
                     <TextField {...endProps} />
+                    <Box sx={{ mx: 2, height: "0.5rem" }}> per </Box>
+                    <Box >
+                      <FormControl fullWidth sx={{ mr: 2, ml: 2 }}>
+                        <InputLabel >Per</InputLabel>
+                        <Select
+                        px={0}
+                          id="demo-simple-select"
+                          label="Per"
+                          onChange={handleChange}
+                        >
+                          <MenuItem value={"mounth"}>mounth</MenuItem>
+                          <MenuItem value={"day"}>day</MenuItem>
+                          <MenuItem value={"hour"}>hour</MenuItem>
+                          <MenuItem value={"minute"}>minute</MenuItem>
+                          <MenuItem value={"second"}>second</MenuItem>
+
+
+                        </Select>
+                      </FormControl>
+                    </Box>
                   </Box>
                 )}
               />
-              <Grid container justifyContent={"center"}  >
-                <Grid item xs={12} md={10} mt={4} mb={6}>
-                  <Line style={{ maxHeight: "30px" }} labels={labelsForLine} incomevalues={Values(labelsForLine, "income")} expensevalues={Values(labelsForLine, "expense")} />
-                </Grid>
-                <Grid container justifyContent={"space-around"} >
-                  <Grid item xs={10} mb={6} md={5}>
+              <Box container  mx={{xs:0,md:6}}>
+                <Box ml={{xs: 1, md: 8}} mr={{xs: 1, md: 8}}>
+                  <Line labels={labelsForLine} incomevalues={Values(labelsForLine, "income")} expensevalues={Values(labelsForLine, "expense")} />
+                </Box>
+                <Box flexGrow={1} mt={6} display={"flex"} justifyContent={{xs: "center", md: "space-around"}} flexDirection={{xs: "column", md: "row"}} >
+                  <Box maxWidth={{md: "50%"}} >
                     <Pie colors1={colorsForIncome} labels={labelsForIncomePie} data={pieValues(labelsForIncomePie)} title={"income"} />
-                  </Grid>
-                  <Grid item xs={10} mb={6} md={5}>
+                  </Box>
+                  <Box maxWidth={{md: "50%"}} >
                     <Pie colors1={colorsForExpense} labels={labelsForExpensePie} data={pieValues(labelsForExpensePie)} title={"expense"} />
-                  </Grid>
-                </Grid>
+                  </Box>
+                </Box>
 
-              </Grid>
+              </Box>
             </LocalizationProvider>
           </Paper>
-        </Grid>
-      </Grid>
+        </Box>
+      </Box>
+
     </>
   );
 };
