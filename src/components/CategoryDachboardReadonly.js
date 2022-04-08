@@ -22,9 +22,9 @@ const adminDachboardReadonly = (props) => {
                     </Grid>
                     <Grid item xs={3}>
                         <TableCell>
-                            <DeleteOutlinedIcon style={{ color: "red"}} onClick={() => props.deleteBtn(props.data.id)} />
-                            <EditIcon style={{ color: "white"}} onClick={(event) => props.editclick(event, props.data)} />
-                            </TableCell>
+                            <DeleteOutlinedIcon style={{ color: "red" }} onClick={() => props.deleteBtn(props.data.id)} />
+                            <EditIcon style={{ color: "white" }} onClick={(event) => props.editclick(event, props.data)} />
+                        </TableCell>
                     </Grid>
                 </Grid>
             </TableRow>

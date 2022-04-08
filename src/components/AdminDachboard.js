@@ -1,7 +1,7 @@
 import React, { useState, useEffect, Fragment } from 'react';
 import axios from 'axios';
-import AdminDachboardReadonly from '../components/adminDachboardReadonly';
-import AdminDachboardEdit from '../components/AdminDachboardEdit';
+import AdminDachboardReadonly from './adminDachboardReadonly';
+import AdminDachboardEdit from './AdminDachboardEdit';
 import Swal from "sweetalert2";
 import { Table, TableCell, TableHead, TableRow, TextField, Button, Grid, Container, Stack } from '@mui/material';
 
@@ -46,7 +46,7 @@ const AdminDachboard = (props) => {
             password: AdminInfo.password
         };
 
-        axios.post(`http://127.0.0.1:8000/api/admin`, userInfo)
+        axios.post(`addadmin`, userInfo)
             .then((res) => window.location.reload())
             .catch((err) => console.log(err));
         Swal.fire({
@@ -89,7 +89,7 @@ const AdminDachboard = (props) => {
     const ConfirmDelete = (id) => {
         Swal.fire({
             title: 'Are you sure? You want to delete this Admin',
-            
+
             icon: 'warning',
             showCancelButton: true,
             confirmButtonColor: '#3085d6',
@@ -108,7 +108,7 @@ const AdminDachboard = (props) => {
         <div>
             <Container maxWidth="xl">
 
-                <Stack direction="row" spacing={2} justifyContent="center" style={{ marginTop:'25px',marginBottom:'25px'}}>
+                <Stack direction="row" spacing={2} justifyContent="center" style={{ marginTop: '25px', marginBottom: '25px' }}>
                     <TextField id="outlined-basic" type='text' name='username' onChange={handlechange} label="username" variant="outlined" />
                     <TextField id="outlined-basic" type='text' name='password' onChange={handlechange} label="password" variant="outlined" />
                     <Button type='button' onClick={handleAdd} variant="contained" disableElevation>ADD</Button>
