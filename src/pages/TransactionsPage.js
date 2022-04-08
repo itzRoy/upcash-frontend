@@ -58,6 +58,7 @@ const TransactionPage = (props) => {
     let newData = [];
     axios.delete(`transactions/${id}`)
 
+    
       .then(
         (response) => {
           if (response.status == 200) {
