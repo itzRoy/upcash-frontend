@@ -11,11 +11,15 @@ import { DateTime } from "luxon";
 
 
 const style = {
+  body: {
+    height: "100vh",
+    flexWrap: 'nowrap',
+    overflowX: 'auto',
+  },
   main: {
     height: "100%",
-    maxWidth: "xl",
-    flexGrow: "1",
-    mt: "74px",
+    width: "100%",
+    mt: "50px",
     mb: "10px",
     mr: "10px"
   },
@@ -39,12 +43,13 @@ const style = {
 
   list: {
     flex: {
-      xs: -2
+      xs: 0.6,
+      md: 2
     },
     height: {
-      xs: '10%',
+      xs: '10px',
       md: '100%'
-    },
+    }
   },
 
   currentBalance: {
@@ -52,7 +57,8 @@ const style = {
     display: "flex",
     flexDirection: "column",
     flex: {
-      xs: -0.7
+      xs: 0.4,
+      md: 1
     },
     height: {
       xs: "fit-content",
@@ -166,13 +172,13 @@ const TransactionPage = (props) => {
 
     <>
       <NavBar admin={localStorage.getItem('admin')} />
-      <Grid container height="100vh" overflow="hidden" >
+      <Grid sx={style.body} container overflow="hidden" >
         <Grid xs={'auto'} height='100vh' item component={"aside"}>
           <SideBar />
         </Grid>
 
         <Grid
-          xs={3}
+          xs
           sm
           item
           sx={style.main}
