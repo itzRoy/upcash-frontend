@@ -1,5 +1,5 @@
-import AdminDachboard from '../components/AdminDachboard'
-import CatDachboard from '../components/CategoryDachboard'
+import AdminDachboard from '../components/SettingsPage/AdminDachboard'
+import CatDachboard from '../components/SettingsPage/CategoryDachboard'
 import { useState } from 'react';
 import { ButtonGroup, Button } from '@mui/material'
 import { useNavigate } from "react-router-dom";
