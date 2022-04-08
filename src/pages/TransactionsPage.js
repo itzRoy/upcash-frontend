@@ -1,4 +1,4 @@
-import { Alert, Button, Container, Dialog, Grid, Paper, Snackbar, Typography } from "@mui/material";
+import { Alert, Button, Container, Dialog, Divider, Grid, Paper, Snackbar, Typography } from "@mui/material";
 import NavBar from "../components/Nav/Navbar";
 import SideBar from "../components/SideBar/SideBar";
 import { useEffect, useState } from "react";
@@ -20,6 +20,11 @@ const style = {
     mr: "10px"
   },
   subGrid: {
+    gap: {
+      xs: 2,
+      md: 3
+    }
+    ,
     height: "100%",
     flexWrap: "nowrap",
     overflow: "hidden",
@@ -33,17 +38,25 @@ const style = {
   },
 
   list: {
-    flex: 1,
+    flex: {
+      xs: -2
+    },
     height: {
-      xs: '53%',
+      xs: '10%',
       md: '100%'
     },
   },
 
   currentBalance: {
+
+    display: "flex",
+    flexDirection: "column",
+    flex: {
+      xs: -0.7
+    },
     height: {
-      xs: "20%",
-      md: "100%"
+      xs: "fit-content",
+      md: "fit-content"
     }
   }
 }
@@ -175,7 +188,6 @@ const TransactionPage = (props) => {
                 overflow={"hidden"}
                 container
                 name="Grid"
-                gap={3}
                 height={"100%"}
                 sx={style.subGrid}
                 columnGap={2}>
@@ -194,7 +206,6 @@ const TransactionPage = (props) => {
                     transactions={filteredData} delete={handelDelete} update={handelUpdate} />
 
                 </Grid>
-
                 <Grid md xs={12} sx={style.currentBalance} item name="currentBalance" >
                   <CurrentBalance transactions={filteredData} />
                   <Button variant="contained" sx={{ marginTop: '10px' }} onClick={() => setOpenAddDialog(true)} fullWidth>Add new Transaction</Button>

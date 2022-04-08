@@ -49,7 +49,7 @@ function CurrentBalance(props) {
     return (
         <Card sx={{
             width: 'auto',
-            height: "auto",
+            height: "fit-content",
             backgroundColor: 'rgb(231, 235, 240)',
             padding: "10px",
         }}>
