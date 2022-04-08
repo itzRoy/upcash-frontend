@@ -1,4 +1,5 @@
 import { Paper, Grid, Typography, Divider, List, Button, Box } from "@mui/material";
+import { grey } from "@mui/material/colors";
 import React, { useEffect, useState } from "react";
 import TransactionCard from "./TransactionCard";
 
@@ -21,6 +22,12 @@ function TransactionsList(props) {
     rangeBox: {
       display: "flex",
       gap: "5px",
+    },
+    noDataBox: {
+      height: '100%',
+      width: '100%',
+      display: "grid",
+      placeContent: 'center'
     }
   }
 
@@ -63,7 +70,10 @@ function TransactionsList(props) {
           <List style={{ height: "100%", overflowY: "auto" }}>
             {props.transactions.map(data => { return <TransactionCard key={data.id} transaction={data} delete={props.delete} update={props.update} /> })}
           </List>
-          : <Typography variant={'h5'}>No Data</Typography>
+          : <Box sx={style.noDataBox}>
+            <Typography variant={'h6'} textAlign="center">No transactions in the selected time period</Typography>
+            <Typography variant={'p'} textAlign="center" fontSize="0.8rem" color={grey[700]}>Select another period or click the "Add new Transactions" to add a transaction</Typography>
+          </Box>
       }
     </Paper>
   );

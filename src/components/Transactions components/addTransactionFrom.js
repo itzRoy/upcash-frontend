@@ -19,7 +19,6 @@ function AddTransactionFrom(props) {
 
     //===== reset form 
     useEffect(() => {
-        console.log('add run')
         setCatType("expense")
         setData({ ...defaultValue })
         setErrors({ ...errorList })
@@ -109,9 +108,11 @@ function AddTransactionFrom(props) {
         return errorFlag
     }
 
+
     //======# create and event object for date picker ============
     const handelDatePicker = (val) => {
         const dateTime = val.toISO(DateTime)
+        console.log("add time:", dateTime)
         const event = {
             target: {
                 name: "created_at",
@@ -170,6 +171,7 @@ function AddTransactionFrom(props) {
                                     label="amount"
                                     name="amount"
                                     type="number"
+                                    inputProps={{ maxLength: "3" }}
                                     error={errors.amount}
                                     helperText={errors.amount ? "amount is Required" : ""}
                                     onChange={e => handelChange(e)} />

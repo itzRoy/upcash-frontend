@@ -3,6 +3,18 @@ import { green, red } from '@mui/material/colors'
 import { Box } from '@mui/system'
 import React, { useEffect, useState } from 'react'
 
+const style = {
+    noDataBox: {
+        padding: '10px',
+        height: '100%',
+        width: '100%',
+        display: "grid",
+        placeContent: 'center'
+    }
+}
+
+
+
 function CurrentBalance(props) {
 
     const [balance, setBalance] = useState({
@@ -47,7 +59,7 @@ function CurrentBalance(props) {
             <Divider />
             {data ? <>
                 <Box mt={'10px'} display={'flex'}>
-                    <Typography flexGrow={1}>income:</Typography>
+                    <Typography flex={1}>income:</Typography>
                     <Typography color={green[700]}>{`${balance.income}`}$</Typography>
                 </Box>
 
@@ -60,7 +72,10 @@ function CurrentBalance(props) {
                 <Box display={'flex'} justifyContent={'right'}>
                     <Typography variant='h6' color={balance.balance > 0 ? green[700] : red[700]}>{`${balance.balance}`}$</Typography>
                 </Box>
-            </> : <Typography>No Data</Typography>}
+            </> :
+                <Box sx={style.noDataBox}>
+                    <Typography variant={'p'} textAlign="center">No transactions data</Typography>
+                </Box>}
         </Card>
     )
 }

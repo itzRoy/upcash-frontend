@@ -12,16 +12,39 @@ import { DateTime } from "luxon";
 
 const style = {
   main: {
-    flexGrow: 1,
-    height: "xl",
+    height: "100%",
     maxWidth: "xl",
+    flexGrow: "1",
     mt: "74px",
     mb: "10px",
     mr: "10px"
   },
-  list: {
-    maxHeight: "100%",
+  subGrid: {
+    height: "100%",
+    flexWrap: "nowrap",
+    overflow: "hidden",
+    backgroundColor: {
+    },
+    padding: "2px",
+    flexDirection: {
+      xs: "column-reverse",
+      md: 'row'
+    },
+  },
 
+  list: {
+    flex: 1,
+    height: {
+      xs: '53%',
+      md: '100%'
+    },
+  },
+
+  currentBalance: {
+    height: {
+      xs: "20%",
+      md: "100%"
+    }
   }
 }
 
@@ -50,21 +73,21 @@ const TransactionPage = (props) => {
   }, [])
 
   useEffect(() => {
-    if (transactionsData.length != 0) setFilteredData(setDataRange(range));
+    if (transactionsData.length === 0) return setFilteredData([])
+    if (transactionsData.length !== 0) return setFilteredData(setDataRange(range));
   }, [transactionsData, range])
+
 
   //Delete Handler 
   const handelDelete = (id) => {
     let newData = [];
     axios.delete(`transactions/${id}`)
-
       .then(
         (response) => {
           if (response.status == 200) {
             newData = transactionsData.filter((item) => {
               return item.id != id
             })
-
           }
         }
       ).then(() => setTransactionsData(newData))
@@ -112,14 +135,14 @@ const TransactionPage = (props) => {
   //======filter data by selected time range
   const setDataRange = (range) => {
     let luxonDate = DateTime.fromISO(transactionsData[0].created_at)
+
     let dt = DateTime.now();
     let rangeStart = dt.startOf(range)
     let rangeEnd = dt.endOf(range)
 
-
     let filteredData = transactionsData.filter(x => {
       let itemTime = DateTime.fromISO(x.created_at)
-      return (itemTime > rangeStart && itemTime < rangeEnd)
+      return (itemTime >= rangeStart && itemTime <= rangeEnd)
     })
 
     return filteredData;
@@ -127,14 +150,17 @@ const TransactionPage = (props) => {
 
 
   return (
+
     <>
       <NavBar admin={localStorage.getItem('admin')} />
-      <Grid container maxWidth="xl" height="100vh">
-        <Grid item component={"aside"}>
+      <Grid container height="100vh" overflow="hidden" >
+        <Grid xs={'auto'} height='100vh' item component={"aside"}>
           <SideBar />
         </Grid>
 
         <Grid
+          xs={3}
+          sm
           item
           sx={style.main}
           component={"main"}
@@ -151,24 +177,25 @@ const TransactionPage = (props) => {
                 name="Grid"
                 gap={3}
                 height={"100%"}
-                sx={{ overflow: "auto", padding: "2px", flexWrap: "wrap-reverse", minHeight: "100%" }}
-                columnGap={2}
-              >
+                sx={style.subGrid}
+                columnGap={2}>
+
                 <Grid
                   item
                   xs={12}
-                  md={9}
+                  md={8}
+                  lg={9}
                   sx={style.list}
-                  name="transactions"
+                  name="transactions">
 
-                >
                   <TransactionsList
                     range={range} setRange={setRange}
                     categories={categories}
                     transactions={filteredData} delete={handelDelete} update={handelUpdate} />
+
                 </Grid>
 
-                <Grid md xs={12} item name="currentBalance">
+                <Grid md xs={12} sx={style.currentBalance} item name="currentBalance" >
                   <CurrentBalance transactions={filteredData} />
                   <Button variant="contained" sx={{ marginTop: '10px' }} onClick={() => setOpenAddDialog(true)} fullWidth>Add new Transaction</Button>
                 </Grid>
