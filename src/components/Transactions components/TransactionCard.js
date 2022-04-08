@@ -1,10 +1,11 @@
 import { Button, Card, Dialog, DialogActions, DialogContent, DialogContentText, DialogTitle, Typography } from "@mui/material";
-import { green, red } from "@mui/material/colors";
+import { green, grey, red } from "@mui/material/colors";
 import { Box, height, width } from "@mui/system";
 import { DateTime } from "luxon";
 import DeleteIcon from '@mui/icons-material/Delete';
 import Delete from "@mui/icons-material/Delete";
 import { useState } from "react";
+import EditTransactionFrom from "./editTransactionsForm"
 
 
 const style = {
@@ -25,6 +26,7 @@ const style = {
     }
   },
   delete: {
+    transition: '500ms',
     ":hover": {
       color: 'red',
       cursor: 'pointer'
@@ -34,14 +36,30 @@ const style = {
     backgroundColor: red[800], ":hover": {
       backgroundColor: green[800]
     }
+  },
+  edit: {
+    paddingX: "15px",
+    fontSize: "0.8rem",
+    lineHeight: "25px",
+    fontWeight: 800,
+    backgroundColor: grey[300],
+    transition: '500ms',
+    overflow: "hidden",
+    ":hover": {
+      backgroundColor: green[800],
+      color: "white",
+      cursor: 'pointer'
+    }
   }
 }
 
 const TransactionCard = (props) => {
 
   // <-----React Function Start-----> //
-  const [open, setOpen] = useState(false);
+  const [openDeleteDialog, setOpenDeleteDialog] = useState(false);
+  const [openEdit, setOpenEdit] = useState(false);
 
+  // destructure transactions data from props
   const { id, title, amount, note, category, currency, created_at: date } = props.transaction;
   const { name: categoryName, type } = props.transaction.category
 
@@ -56,12 +74,14 @@ const TransactionCard = (props) => {
   }
 
   const handleClickOpen = () => {
-    setOpen(true);
+    setOpenDeleteDialog(true);
   };
 
   const handleClose = () => {
-    setOpen(false);
+    setOpenDeleteDialog(false);
   };
+
+
 
 
   return (
@@ -87,10 +107,14 @@ const TransactionCard = (props) => {
         <Box sx={{ display: 'flex', justifyContent: 'space-between', width: "100%" }}>
 
           {/*=== Note ===*/}
-          <Typography fontSize={'0.8rem'} color={'black'}>Note:{note}</Typography>
+          <Typography sx={{ flexGrow: 1 }} fontSize={'0.8rem'} color={'black'}>Note:{note}</Typography>
+
+
+          {/*=== edit icon ===*/}
+          <Typography onClick={() => setOpenEdit(true)} sx={style.edit}>Edit</Typography>
 
           {/*=== Delete icon ===*/}
-          <Delete onClick={handleClickOpen} sx={style.delete} />
+          <Delete onClick={() => setOpenDeleteDialog(true)} sx={style.delete} />
 
         </Box>
 
@@ -100,8 +124,8 @@ const TransactionCard = (props) => {
       {/* ==================== MODAL ==================== */}
 
       <Dialog
-        open={open}
-        onClose={handleClose}
+        open={openDeleteDialog}
+        onClose={() => setOpenDeleteDialog(false)}
       >
         <DialogTitle color={red[700]} id="confirm-delete-dialog">
           {"Confirm Delete Transaction"}
@@ -112,7 +136,7 @@ const TransactionCard = (props) => {
           </DialogContentText>
         </DialogContent>
         <DialogActions>
-          <Button autoFocus onClick={handleClose}>
+          <Button autoFocus onClick={() => setOpenDeleteDialog(false)}>
             Cancel
           </Button>
           <Button variant="contained" sx={style.confirmButton} onClick={() => props.delete(id)} autoFocus>
@@ -121,6 +145,9 @@ const TransactionCard = (props) => {
         </DialogActions>
       </Dialog>
 
+      {openEdit ?
+        <EditTransactionFrom open={openEdit} openClose={setOpenEdit} data={props.transaction} update={props.update} />
+        : null}
     </>
   );
 };

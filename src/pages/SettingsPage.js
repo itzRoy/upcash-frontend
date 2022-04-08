@@ -10,12 +10,12 @@ const SettingsPage = () => {
 
   const [settingPage, setSettingPage] = useState({
     showbtn: true,
-   color:null
+    color: null
   });
 
-  const handleCat = () => { setSettingPage({ showbtn: true ,color:false}) }
+  const handleCat = () => { setSettingPage({ showbtn: true, color: false }) }
 
-  const handleAdmin = () => { setSettingPage({ showbtn: false,color:true}) }
+  const handleAdmin = () => { setSettingPage({ showbtn: false, color: true }) }
 
   let page = null;
   if (settingPage.showbtn === true) page = <CatDachboard />;
@@ -28,16 +28,16 @@ const SettingsPage = () => {
 
       <Button style={{ width: "100%", color: "white" }} onClick={() => { navigate("/transactions"); }}>Home</Button>
       <ButtonGroup style={{ width: "100%" }} variant="contained" aria-label="outlined button group" >
-      
+
         <Button
-          style={{ width: "50%",color:"white" }}
-          color={settingPage.color  ? "primary" : "secondary"}
+          style={{ width: "50%", color: "white" }}
+          color={settingPage.color ? "primary" : "secondary"}
           onClick={handleCat}>
           Categories
         </Button>
 
         <Button
-          style={{ width: "50%" ,color:"white" }}
+          style={{ width: "50%", color: "white" }}
           color={settingPage.color ? "secondary" : "primary"}
           onClick={handleAdmin}>
           Admins
