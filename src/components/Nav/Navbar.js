@@ -68,7 +68,8 @@ const NavBar = (props) => {
           </Toolbar>
         </Container>
       </AppBar>
-// Modal confirm logout
+
+      {/*--------Modal confirm logout-------*/}
       <Dialog
         open={openDeleteDialog}
         onClose={() => setOpenDeleteDialog(false)}

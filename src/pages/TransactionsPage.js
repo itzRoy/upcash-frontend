@@ -12,14 +12,13 @@ import { DateTime } from "luxon";
 
 const style = {
   body: {
-    height: "100vh",
     flexWrap: 'nowrap',
-    overflowX: 'auto',
+    overflowX: 'auto'
   },
   main: {
     height: "100%",
     width: "100%",
-    mt: "50px",
+    mt: "74px",
     mb: "10px",
     mr: "10px"
   },
@@ -172,7 +171,7 @@ const TransactionPage = (props) => {
 
     <>
       <NavBar admin={localStorage.getItem('admin')} />
-      <Grid sx={style.body} container overflow="hidden" >
+      <Grid sx={style.body} container height="100vh" overflow="hidden" >
         <Grid xs={'auto'} height='100vh' item component={"aside"}>
           <SideBar />
         </Grid>
