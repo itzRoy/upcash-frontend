@@ -37,7 +37,7 @@ const style = {
     },
     height: "100%",
     flexWrap: "nowrap",
-    overflow: "hidden",
+    overflow: "clip",
     backgroundColor: {
     },
     padding: "2px",
@@ -45,17 +45,6 @@ const style = {
       xs: "column",
       md: 'row'
     },
-
-    // animation: ' popout 1000ms linear',
-
-    // '@keyframes popout': {
-    //   '0%': {
-    //     transform: 'scale(0)'
-    //   },
-    //   '100% ': {
-    //     transform: 'scale(1)'
-    //   }
-    // }
   },
   //=================================
   list: {

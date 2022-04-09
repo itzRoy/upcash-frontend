@@ -94,7 +94,10 @@ const TransactionCard = (props) => {
           {/*=== title & Category ===*/}
           <Box flexGrow={1} height={'50px'} p={'3px'}>
             <Typography overflow={'hidden'} fontWeight={800} >{title}</Typography>
-            <Typography fontSize={'0.8rem'} color={'#5B5B5B'} >{`category: ${categoryName}`}</Typography>
+            <Box>
+              <Typography variant="span" fontSize={'0.8rem'} >Category:&nbsp;</Typography>
+              <Typography variant="span" fontSize={'0.8rem'} color={grey[700]}  >{categoryName}</Typography>
+            </Box>
           </Box>
 
           {/*=== amount & Date ===*/}
@@ -104,10 +107,11 @@ const TransactionCard = (props) => {
           </Box>
         </Box>
 
-        <Box sx={{ display: 'flex', justifyContent: 'space-between', width: "100%" }}>
+        <Box pl={'3px'} sx={{ display: 'flex', justifyContent: 'space-between', width: "100%" }}>
 
           {/*=== Note ===*/}
-          <Typography sx={{ flexGrow: 1 }} fontSize={'0.8rem'} color={'black'}>Note:{note}</Typography>
+          <Typography variant='span' fontSize={'0.8rem'} color={'black'}>Note:&nbsp;</Typography>
+          <Typography variant='span' sx={{ flexGrow: 1 }} fontSize={'0.8rem'} color={'#5B5B5B'}>{note}</Typography>
 
 
           {/*=== edit icon ===*/}
