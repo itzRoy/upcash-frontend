@@ -1,4 +1,4 @@
-import { TextField, InputAdornment, Card, Typography, Grid, Paper, Divider, List, Box } from "@mui/material";
+import { TextField, InputAdornment, Card, Typography, Grid, Paper, Divider, List, Box, CircularProgress } from "@mui/material";
 import NavBar from "../components/Nav/Navbar";
 import SideBar from "../components/SideBar/SideBar";
 import { createRef, useEffect, useState } from "react";
@@ -184,7 +184,7 @@ const ProfitGoalPage = (props) => {
                 <List style={{ height: "fit-content", overflowY: "auto" }}>
                 </List></>
               : <Box sx={style.noDataBox}>
-                <Typography variant={'h6'} textAlign="center">Loading...</Typography>
+                <CircularProgress color="inherit" />
               </Box>
             }
 

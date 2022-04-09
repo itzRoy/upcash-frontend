@@ -1,4 +1,4 @@
-import { Alert, Box, Button, Container, Dialog, Divider, Grid, Paper, Snackbar, Typography } from "@mui/material";
+import { Alert, Box, Button, CircularProgress, Container, Dialog, Divider, Grid, Paper, Snackbar, Typography } from "@mui/material";
 import NavBar from "../components/Nav/Navbar";
 import SideBar from "../components/SideBar/SideBar";
 import { useEffect, useState } from "react";
@@ -15,7 +15,13 @@ const style = {
     flexWrap: 'nowrap',
     overflowX: 'auto',
   },
-  // ---------
+  //=================================
+  paper: {
+    p: '20px',
+    overflow: 'hidden',
+
+  },
+  //=================================
   main: {
     height: "100%",
     width: "100%",
@@ -23,7 +29,7 @@ const style = {
     mb: "10px",
     mr: "10px"
   },
-  // ---------
+  //=================================
   subGrid: {
     gap: {
       xs: 2,
@@ -39,8 +45,19 @@ const style = {
       xs: "column",
       md: 'row'
     },
+
+    // animation: ' popout 1000ms linear',
+
+    // '@keyframes popout': {
+    //   '0%': {
+    //     transform: 'scale(0)'
+    //   },
+    //   '100% ': {
+    //     transform: 'scale(1)'
+    //   }
+    // }
   },
-  // ---------
+  //=================================
   list: {
     flex: {
       xs: 1,
@@ -55,14 +72,14 @@ const style = {
       md: '100%'
     }
   },
-  // ---------
+  //=================================
   noDataBox: {
     height: '100%',
     width: '100%',
     display: "grid",
     placeContent: 'center'
   },
-  // ---------
+  //=================================
   currentBalance: {
     display: "flex",
     flexDirection: "column",
@@ -79,7 +96,7 @@ const style = {
       md: "fit-content"
     }
   },
-  // ---------
+  //=================================
 }
 
 
@@ -201,18 +218,18 @@ const TransactionPage = (props) => {
         >
           <Paper
             style={{ height: "calc(100vh - 84px)" }}
-            sx={{ p: '20px', overflowY: 'auto' }}
+            sx={style.paper}
             name="mainContainer"
           >
             {isLoading ?
               <Box sx={style.noDataBox}>
-                <Typography variant={'h6'} textAlign="center">Loading...</Typography>
+                <CircularProgress color="inherit" />
               </Box>
               :
               <Grid
                 overflow={"hidden"}
                 container
-                name="Grid"
+                name="subGrid"
                 height={"100%"}
                 sx={style.subGrid}
                 columnGap={2}>
