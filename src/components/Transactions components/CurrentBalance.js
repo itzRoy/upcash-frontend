@@ -61,7 +61,7 @@ function CurrentBalance(props) {
                     <Typography variant='h6' color={balance.balance > 0 ? green[700] : red[700]}>{`${balance.balance}`}$</Typography>
                 </Box>
             </> : <Typography>No Data</Typography>}
-        </Card >
+        </Card>
     )
 }
 

@@ -144,7 +144,10 @@ const TransactionCard = (props) => {
           </Button>
         </DialogActions>
       </Dialog>
-      <EditTransactionFrom open={openEdit} openClose={setOpenEdit} data={props.transaction} update={props.update} />
+
+      {openEdit ?
+        <EditTransactionFrom open={openEdit} openClose={setOpenEdit} data={props.transaction} update={props.update} />
+        : null}
     </>
   );
 };

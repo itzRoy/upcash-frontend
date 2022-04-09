@@ -1,4 +1,4 @@
-import { Alert, Button, Dialog, DialogActions, DialogContent, DialogTitle, Divider, FormControl, FormGroup, MenuItem, Snackbar, TextField, Typography } from '@mui/material'
+import { Alert, Button, Container, Dialog, DialogActions, DialogContent, DialogTitle, Divider, FormControl, FormGroup, MenuItem, Snackbar, TextField, Typography } from '@mui/material'
 import { green, red } from '@mui/material/colors';
 import DateAdapter from '@mui/lab/AdapterLuxon';
 import { LocalizationProvider, DateTimePicker, StaticDateTimePicker } from '@mui/lab';
@@ -8,9 +8,10 @@ import axios from 'axios';
 
 function EditTransactionFrom(props) {
     const errorList = { title: false, amount: false, category_id: false, }
+    const [isLoading, setIsLoading] = useState(true)
     const [data, setData] = useState({ ...props.data, categories: [] })
     const [oldCat, setOldCat] = useState([])
-    const [catState, seCatState] = useState(true)
+    const [catState, setCatState] = useState(true)
     const [errors, setErrors] = useState({ ...errorList })
     const [openErrorAlert, setOpenErrorAlert] = useState(false);
     const [openSuccessAlert, setOpenSuccessAlert] = useState(false);
@@ -20,10 +21,12 @@ function EditTransactionFrom(props) {
     //===== get categories on category type change
     useEffect(() => {
         //reset form on open to original data
+        console.log('edit run')
         axios.get(`income-expense/${data.category.type}`)
             .then(response => {
                 setData({ ...data, categories: response.data })
                 if (oldCat.length === 0) setOldCat(response.data)
+                setIsLoading(false)
             })
             .catch(err => console.log(err))
     }, [catState])
@@ -46,13 +49,15 @@ function EditTransactionFrom(props) {
     };
 
 
+
+
     // =========================================================================
 
     //===== handling changing category type =================
     const handelCatTypeChange = (event) => {
         const value = event.target.value
         // trigger useEffect on category change 
-        seCatState(!catState)
+        setCatState(!catState)
         // reset category_id after changing category type
         setData({ ...data, category_id: "", category: { ...data.category, type: value } })
     }
@@ -129,6 +134,7 @@ function EditTransactionFrom(props) {
     // #################################################################################
     // ####### Return ##################################################################
     return (
+
         <>
             <Dialog
                 scroll="paper"
@@ -141,126 +147,126 @@ function EditTransactionFrom(props) {
                 <DialogTitle color={green[700]} id="edit-transaction-dialog">
                     {"Edit transaction"}
                 </DialogTitle>
+                {isLoading ? <Container><Typography>Loading...</Typography></Container> :
+                    <DialogContent>
+                        <Divider />
 
-                <DialogContent>
-                    <Divider />
-
-                    <FormGroup>
-                        {/*====== Title ================================ */}
-                        <FormControl required margin="normal"   >
-                            <TextField required
-                                label="Title"
-                                name="title"
-                                type="text"
-                                error={errors.title}
-                                helperText={errors.title ? "Title is Required" : ""}
-                                value={data.title}
-                                onChange={e => handelChange(e)} />
-                        </FormControl>
-
-                        {/*====== Amount and currency ================== */}
-                        <FormGroup sx={{ gap: "10px" }} row >
-
-                            <FormControl sx={{ flexGrow: 0.8 }} required margin="normal" type="number" >
-
-                                <TextField
-                                    label="amount"
-                                    name="amount"
-                                    type="number"
-                                    value={data.amount}
-                                    error={errors.amount}
-                                    helperText={errors.amount ? "amount is Required" : ""}
+                        <FormGroup>
+                            {/*====== Title ================================ */}
+                            <FormControl required margin="normal"   >
+                                <TextField required
+                                    label="Title"
+                                    name="title"
+                                    type="text"
+                                    error={errors.title}
+                                    helperText={errors.title ? "Title is Required" : ""}
+                                    value={data.title}
                                     onChange={e => handelChange(e)} />
                             </FormControl>
 
-                            <FormControl margin="normal" sx={{ flexGrow: 0.2 }} >
-                                <TextField
-                                    select
-                                    required
-                                    name="currency_id"
-                                    value={1}
-                                    label="Currency"
-                                    onChange={(e) => handelChange(e)}
-                                >
-                                    <MenuItem value={1}>$-USD</MenuItem>
+                            {/*====== Amount and currency ================== */}
+                            <FormGroup sx={{ gap: "10px" }} row >
 
-                                </TextField>
+                                <FormControl sx={{ flexGrow: 0.8 }} required margin="normal" type="number" >
+
+                                    <TextField
+                                        label="amount"
+                                        name="amount"
+                                        type="number"
+                                        value={data.amount}
+                                        error={errors.amount}
+                                        helperText={errors.amount ? "amount is Required" : ""}
+                                        onChange={e => handelChange(e)} />
+                                </FormControl>
+
+                                <FormControl margin="normal" sx={{ flexGrow: 0.2 }} >
+                                    <TextField
+                                        select
+                                        required
+                                        name="currency_id"
+                                        value={1}
+                                        label="Currency"
+                                        onChange={(e) => handelChange(e)}
+                                    >
+                                        <MenuItem value={1}>$-USD</MenuItem>
+
+                                    </TextField>
+                                </FormControl>
+
+                            </FormGroup>
+
+                            {/*====== Type ================================= */}
+                            <FormGroup sx={{ columnGap: "10px", }} row >
+                                <FormControl sx={{ flexGrow: 0.5 }} margin="normal"  >
+
+                                    <TextField variant="outlined"
+
+                                        select
+                                        required
+                                        name="expense-type"
+                                        value={data.category.type}
+                                        label="Transaction Type"
+                                        onChange={e => handelCatTypeChange(e)}
+                                    >
+
+                                        <MenuItem value={"expense"}>Expense</MenuItem>
+                                        <MenuItem value={"income"}>Income</MenuItem>
+
+                                    </TextField>
+                                </FormControl>
+
+                                {/*====== Select Category ====================== */}
+                                <FormControl margin="normal" sx={{ flexGrow: 0.5 }} >
+
+                                    <TextField variant="outlined"
+                                        select
+                                        required
+                                        id="category"
+                                        name="category_id"
+                                        value={data.category_id || ""}
+                                        label="Category"
+                                        error={errors.category_id}
+                                        helperText={errors.category_id ? "category is Required" : ""}
+                                        onChange={e => handelChange(e)}
+                                    >
+
+                                        {data.categories.map((item) => {
+                                            return <MenuItem key={item.id} value={item.id}>{item.name}</MenuItem>
+                                        })}
+
+                                    </TextField>
+                                </FormControl>
+                            </FormGroup>
+
+
+                            {/*====== Note ================================ */}
+                            <FormControl margin="normal">
+                                <TextField label="note" name="note" value={data.note || ""}
+                                    onChange={e => handelChange(e)}></TextField>
                             </FormControl>
+
+
+                            {/*====== Select Date ========================== */}
+                            <FormControl margin="normal" >
+                                <LocalizationProvider dateAdapter={DateAdapter}>
+                                    <DateTimePicker
+                                        name="created_at"
+                                        label="Date & Time picker"
+                                        value={data.created_at}
+                                        maxDateTime={DateTime.now()}
+                                        renderInput={(params) => <TextField  {...params} />}
+                                        onChange={val => handelDatePicker(val)}
+                                    />
+                                </LocalizationProvider>
+                            </FormControl>
+
+
 
                         </FormGroup>
 
-                        {/*====== Type ================================= */}
-                        <FormGroup sx={{ columnGap: "10px", }} row >
-                            <FormControl sx={{ flexGrow: 0.5 }} margin="normal"  >
 
-                                <TextField variant="outlined"
-
-                                    select
-                                    required
-                                    name="expense-type"
-                                    value={data.category.type}
-                                    label="Transaction Type"
-                                    onChange={e => handelCatTypeChange(e)}
-                                >
-
-                                    <MenuItem value={"expense"}>Expense</MenuItem>
-                                    <MenuItem value={"income"}>Income</MenuItem>
-
-                                </TextField>
-                            </FormControl>
-
-                            {/*====== Select Category ====================== */}
-                            <FormControl margin="normal" sx={{ flexGrow: 0.5 }} >
-
-                                <TextField variant="outlined"
-                                    select
-                                    required
-                                    id="category"
-                                    name="category_id"
-                                    value={data.category_id}
-                                    label="Category"
-                                    error={errors.category_id}
-                                    helperText={errors.category_id ? "category is Required" : ""}
-                                    onChange={e => handelChange(e)}
-                                >
-
-                                    {data.categories.map((item) => {
-                                        return <MenuItem key={item.id} value={item.id}>{item.name}</MenuItem>
-                                    })}
-
-                                </TextField>
-                            </FormControl>
-                        </FormGroup>
-
-
-                        {/*====== Note ================================ */}
-                        <FormControl margin="normal">
-                            <TextField label="note" name="note" value={data.note || ""}
-                                onChange={e => handelChange(e)}></TextField>
-                        </FormControl>
-
-
-                        {/*====== Select Date ========================== */}
-                        <FormControl margin="normal" >
-                            <LocalizationProvider dateAdapter={DateAdapter}>
-                                <DateTimePicker
-                                    name="created_at"
-                                    label="Date & Time picker"
-                                    value={data.created_at}
-                                    maxDateTime={DateTime.now()}
-                                    renderInput={(params) => <TextField  {...params} />}
-                                    onChange={val => handelDatePicker(val)}
-                                />
-                            </LocalizationProvider>
-                        </FormControl>
-
-
-
-                    </FormGroup>
-
-
-                </DialogContent>
-
+                    </DialogContent>
+                }
                 <DialogActions>
                     <Button autoFocus color="error" onClick={handelClose} >
                         Cancel

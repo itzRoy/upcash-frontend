@@ -1,12 +1,13 @@
 import { Alert, Button, Container, Dialog, Grid, Paper, Snackbar, Typography } from "@mui/material";
 import NavBar from "../components/Nav/Navbar";
 import SideBar from "../components/SideBar/SideBar";
-import { createRef, useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import TransactionsList from "../components/Transactions components/TransactionsList";
 import CurrentBalance from "../components/Transactions components/CurrentBalance";
 import axios from "axios";
 import AddTransactionFrom from "../components/Transactions components/addTransactionFrom";
 import { green } from "@mui/material/colors";
+import { DateTime } from "luxon";
 
 
 const style = {
@@ -28,36 +29,36 @@ const style = {
 const TransactionPage = (props) => {
   // states
   const [transactionsData, setTransactionsData] = useState([]);
-  const [categoriesData, setCategoriesData] = useState([])
+  const [filteredData, setFilteredData] = useState([])
+  const [categories, setCategories] = useState([])
+  const [range, setRange] = useState('week');
   const [isLoading, setIsLoading] = useState(true);
   const [openAddDialog, setOpenAddDialog] = useState(false);
   const [openSuccessUpdateAlert, setOpenSuccessUpdateAlert] = useState(false);
 
   //fetch transactions data
-  useEffect(
+  useEffect(() => {
+    axios.get("transactions")
+      .then(response => setTransactionsData(response.data.Data.reverse()))
+      .then(() => setIsLoading(false))
+      .catch(err => console.log(err));
+    axios.get("categories")
+      .then(response => setCategories(response.data))
+      .then(() => setIsLoading(false))
+      .catch(err => console.log(err));
 
-    () => {
+  }, [])
 
-      //get all transactions
-      axios.get("transactions")
-        .then((response) => { setTransactionsData(response.data.Data) })
-        .catch(err => console.log(err));
-
-
-      // get all Categories
-      axios.get("categories")
-        .then((response) => { setCategoriesData(response.data) })
-        .then(() => setIsLoading(false))
-        .catch(err => console.log(err));
-    }, []);
-
-
+  useEffect(() => {
+    if (transactionsData.length != 0) setFilteredData(setDataRange(range));
+  }, [transactionsData, range])
 
   //Delete Handler 
   const handelDelete = (id) => {
     let newData = [];
     axios.delete(`transactions/${id}`)
 
+    
       .then(
         (response) => {
           if (response.status == 200) {
@@ -95,7 +96,6 @@ const TransactionPage = (props) => {
       currency_id: data.currency_id,
       created_at: data.created_at
     }
-    console.log("newData:", newData)
     axios.put(`transactions/${id}`, newData)
       .then(response => {
         if (response.status == 200) {
@@ -110,9 +110,24 @@ const TransactionPage = (props) => {
       .catch((err) => console.log(err))
   }
 
+  //======filter data by selected time range
+  const setDataRange = (range) => {
+    let luxonDate = DateTime.fromISO(transactionsData[0].created_at)
+    let dt = DateTime.now();
+    let rangeStart = dt.startOf(range)
+    let rangeEnd = dt.endOf(range)
+
+
+    let filteredData = transactionsData.filter(x => {
+      let itemTime = DateTime.fromISO(x.created_at)
+      return (itemTime > rangeStart && itemTime < rangeEnd)
+    })
+
+    return filteredData;
+  }
+
 
   return (
-
     <>
       <NavBar admin={localStorage.getItem('admin')} />
       <Grid container maxWidth="xl" height="100vh">
@@ -148,11 +163,14 @@ const TransactionPage = (props) => {
                   name="transactions"
 
                 >
-                  <TransactionsList transactions={transactionsData} delete={handelDelete} update={handelUpdate} />
+                  <TransactionsList
+                    range={range} setRange={setRange}
+                    categories={categories}
+                    transactions={filteredData} delete={handelDelete} update={handelUpdate} />
                 </Grid>
 
                 <Grid md xs={12} item name="currentBalance">
-                  <CurrentBalance transactions={transactionsData} />
+                  <CurrentBalance transactions={filteredData} />
                   <Button variant="contained" sx={{ marginTop: '10px' }} onClick={() => setOpenAddDialog(true)} fullWidth>Add new Transaction</Button>
                 </Grid>
 
