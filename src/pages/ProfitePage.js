@@ -16,6 +16,12 @@ const style = {
     mt: "74px",
     mb: "10px",
     mr: "10px"
+  },
+  noDataBox: {
+    height: '100%',
+    width: '100%',
+    display: "grid",
+    placeContent: 'center'
   }
 }
 
@@ -98,7 +104,7 @@ const ProfitGoalPage = (props) => {
 
   const diffInDays = diffInMs / (1000 * 60 * 60 * 24);
 
- const estimation = ((amount - balance) / diffInDays).toFixed()
+  const estimation = ((amount - balance) / diffInDays).toFixed()
 
   const handleChange = (e) => {
     e.preventDefault();
@@ -108,9 +114,9 @@ const ProfitGoalPage = (props) => {
 
 
   return (
-    profitGoals.length ? <>
+    <>
       <NavBar admin={localStorage.getItem('admin')} />
-      <Grid maxWidth="xl" height="100vh" container>
+      <Grid maxWidth="xl" height="100vh" flexWrap="nowrap" container overflowX="auto">
         <Grid item>
           <SideBar />
         </Grid>
@@ -122,80 +128,70 @@ const ProfitGoalPage = (props) => {
         >
           <Paper
             style={{ height: "calc(100vh - 84px)" }}
-            sx={{ p: { md: '20px' }, overflowY: 'auto' }}
+            sx={{ p: '20px', overflowY: 'auto' }}
             name="mainContainer">
-            <Paper
-              sx={{
-                height: "100%",
-                backgroundColor: 'rgb(231, 235, 240)',
-                padding: "10px",
-                pb: "30px",
-                overflow: "hidden",
-              }}
-              elevation={1}
-            >
 
-              <Box m={3}>
-                <Box>
-                  <Card sx={{
-                    width: 'auto',
-                    height: "auto",
-                    padding: "10px",
-                  }}>
+            {profitGoals.length ?
+              <>
+                <Box m={1}>
+                  <Box>
+                    <Card sx={{
+                      width: 'auto',
+                      height: "auto",
+                      padding: "10px",
+                      backgroundColor: 'rgb(231, 235, 240)'
+                    }}>
 
-                    <Box display={"flex"} justifyContent={"center"} alignItems={"center"}>
-                      <Typography display={"block"} textAlign={"center"} variant='h6' color="primary">{`Current Goal: `}</Typography>
-                      <TextField
-                        id="filled-start-adornment"
-                        sx={{ m: 1, display: "block", maxWidth: "100px" }}
-                        InputProps={{
-                          endAdornment: <InputAdornment position='start'><Typography>$</Typography></InputAdornment>,
-                        }}
-                        value={amount}
-                        onChange={handleChange}
-                        type={"number"}
-                        size="small"
-                        variant="standard"
-                        px={0}
-                      />
-                      <Typography display={"block"} textAlign={"center"} variant='h6' color="primary">{` for ${new Date().getFullYear()}`}</Typography>
+                      <Box display={"flex"} justifyContent={"center"} alignItems={"center"}>
+                        <Typography display={"block"} textAlign={"center"} variant='h6' color="primary">{`Current Goal: `}</Typography>
+                        <TextField
+                          id="filled-start-adornment"
+                          sx={{ m: 1, display: "block", maxWidth: "100px" }}
+                          InputProps={{
+                            endAdornment: <InputAdornment position='start'><Typography>$</Typography></InputAdornment>,
+                          }}
+                          value={amount}
+                          onChange={handleChange}
+                          type={"number"}
+                          size="small"
+                          variant="standard"
+                          px={0}
+                        />
+                        <Typography display={"block"} textAlign={"center"} variant='h6' color="primary">{` for ${new Date().getFullYear()}`}</Typography>
 
-                    </Box>
-                    <Divider />
-                    <Box mt={'10px'} display={'flex'} >
-                      <Typography flexGrow={1}>income:</Typography>
-                      <Typography color={green[700]}>{income}$</Typography>
-                    </Box>
+                      </Box>
+                      <Divider />
+                      <Box mt={'10px'} display={'flex'} >
+                        <Typography flexGrow={1}>income:</Typography>
+                        <Typography color={green[700]}>{income}$</Typography>
+                      </Box>
 
-                    <Box display={'flex'} my={'10px'}>
-                      <Typography flexGrow={1}>expense:</Typography>
-                      <Typography color={red[700]}>{expense}$</Typography>
-                    </Box>
-                    <Box display={'flex'} justifyContent={'right'}>
-                      <Typography flexGrow={1}>balance:</Typography>
-                      <Typography variant='h6' color={balance > 0 ? green[700] : red[700]}>{`${balance}`}$</Typography>
-                    </Box>
-                    <Divider xs={{ mb: "2rem" }}>Progress</Divider>
-                    <ProgressBar completed={parseInt(percentage)} />
-                    <Typography mt={2} display={"block"} textAlign={"center"} variant='body1' color="primary">{`estimation: you have to earn ${estimation}$ per day in order to achieve your ${new Date().getFullYear()}  goal`}</Typography>
+                      <Box display={'flex'} my={'10px'}>
+                        <Typography flexGrow={1}>expense:</Typography>
+                        <Typography color={red[700]}>{expense}$</Typography>
+                      </Box>
+                      <Box display={'flex'} justifyContent={'right'}>
+                        <Typography flexGrow={1}>balance:</Typography>
+                        <Typography variant='h6' color={balance > 0 ? green[700] : red[700]}>{`${balance}`}$</Typography>
+                      </Box>
+                      <Divider xs={{ mb: "2rem" }}>Progress</Divider>
+                      <ProgressBar completed={parseInt(percentage)} />
+                      <Typography mt={2} display={"block"} textAlign={"center"} variant='body1' color="primary">{`estimation: you have to earn ${estimation}$ per day in order to achieve your ${new Date().getFullYear()}  goal`}</Typography>
 
-                  </Card >
+                    </Card>
+                  </Box>
                 </Box>
-
-
+                <List style={{ height: "fit-content", overflowY: "auto" }}>
+                </List></>
+              : <Box sx={style.noDataBox}>
+                <Typography variant={'h6'} textAlign="center">Loading...</Typography>
               </Box>
+            }
 
-
-
-              <List style={{ height: "100%", overflowY: "auto" }}>
-              </List>
-              : <Typography>No Data</Typography>
-
-            </Paper>
           </Paper>
         </Grid>
       </Grid>
-    </> : <h2></h2>
+    </>
   )
 };
 

@@ -6,7 +6,7 @@ import React, { useEffect, useState } from 'react'
 const style = {
     noDataBox: {
         padding: '10px',
-        height: '100%',
+        height: 'auto',
         width: '100%',
         display: "grid",
         placeContent: 'center'

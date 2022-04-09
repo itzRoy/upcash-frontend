@@ -1,4 +1,4 @@
-import { Alert, Button, Container, Dialog, Divider, Grid, Paper, Snackbar, Typography } from "@mui/material";
+import { Alert, Box, Button, Container, Dialog, Divider, Grid, Paper, Snackbar, Typography } from "@mui/material";
 import NavBar from "../components/Nav/Navbar";
 import SideBar from "../components/SideBar/SideBar";
 import { useEffect, useState } from "react";
@@ -13,8 +13,9 @@ import { DateTime } from "luxon";
 const style = {
   body: {
     flexWrap: 'nowrap',
-    overflowX: 'auto'
+    overflowX: 'auto',
   },
+  // ---------
   main: {
     height: "100%",
     width: "100%",
@@ -22,12 +23,12 @@ const style = {
     mb: "10px",
     mr: "10px"
   },
+  // ---------
   subGrid: {
     gap: {
       xs: 2,
       md: 3
-    }
-    ,
+    },
     height: "100%",
     flexWrap: "nowrap",
     overflow: "hidden",
@@ -35,35 +36,50 @@ const style = {
     },
     padding: "2px",
     flexDirection: {
-      xs: "column-reverse",
+      xs: "column",
       md: 'row'
     },
   },
-
+  // ---------
   list: {
     flex: {
-      xs: 0.6,
+      xs: 1,
       md: 2
+    },
+    order: {
+      xs: 2,
+      md: 1
     },
     height: {
       xs: '10px',
       md: '100%'
     }
   },
-
+  // ---------
+  noDataBox: {
+    height: '100%',
+    width: '100%',
+    display: "grid",
+    placeContent: 'center'
+  },
+  // ---------
   currentBalance: {
-
     display: "flex",
     flexDirection: "column",
     flex: {
-      xs: 0.4,
+      xs: 0,
       md: 1
     },
+    order: {
+      xs: 1,
+      md: 2
+    },
     height: {
-      xs: "fit-content",
+      xs: "auto",
       md: "fit-content"
     }
-  }
+  },
+  // ---------
 }
 
 
@@ -188,7 +204,11 @@ const TransactionPage = (props) => {
             sx={{ p: '20px', overflowY: 'auto' }}
             name="mainContainer"
           >
-            {isLoading ? <Typography>Loading...</Typography> :
+            {isLoading ?
+              <Box sx={style.noDataBox}>
+                <Typography variant={'h6'} textAlign="center">Loading...</Typography>
+              </Box>
+              :
               <Grid
                 overflow={"hidden"}
                 container
