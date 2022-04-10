@@ -247,12 +247,12 @@ function EditTransactionFrom(props) {
 
 
                             {/*====== Select Date ========================== */}
-                            <FormControl margin="normal" >
+                            <FormControl margin="normal" error={false} >
                                 <LocalizationProvider dateAdapter={DateAdapter}>
                                     <DateTimePicker
                                         name="created_at"
                                         label="Date & Time picker"
-                                        value={data.created_at}
+                                        value={data.created_at || ''}
                                         maxDateTime={DateTime.now()}
                                         renderInput={(params) => <TextField  {...params} />}
                                         onChange={val => handelDatePicker(val)}

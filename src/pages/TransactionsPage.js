@@ -1,4 +1,4 @@
-import { Alert, Button, Container, Dialog, Grid, Paper, Snackbar, Typography } from "@mui/material";
+import { Alert, Box, Button, CircularProgress, Container, Dialog, Divider, Grid, Paper, Snackbar, Typography } from "@mui/material";
 import NavBar from "../components/Nav/Navbar";
 import SideBar from "../components/SideBar/SideBar";
 import { useEffect, useState } from "react";
@@ -11,18 +11,81 @@ import { DateTime } from "luxon";
 
 
 const style = {
+  body: {
+    flexWrap: 'nowrap',
+    overflowX: 'auto',
+  },
+  //=================================
+  paper: {
+    p: '20px',
+    overflow: 'hidden',
+
+  },
+  //=================================
   main: {
-    flexGrow: 1,
-    height: "xl",
-    maxWidth: "xl",
+    height: "100%",
+    width: "100%",
     mt: "74px",
     mb: "10px",
     mr: "10px"
   },
+  //=================================
+  subGrid: {
+    gap: {
+      xs: 2,
+      md: 3
+    },
+    height: "100%",
+    flexWrap: "nowrap",
+    overflow: "clip",
+    backgroundColor: {
+    },
+    padding: "2px",
+    flexDirection: {
+      xs: "column",
+      md: 'row'
+    },
+  },
+  //=================================
   list: {
-    maxHeight: "100%",
-
-  }
+    flex: {
+      xs: 1,
+      md: 2
+    },
+    order: {
+      xs: 2,
+      md: 1
+    },
+    height: {
+      xs: '10px',
+      md: '100%'
+    }
+  },
+  //=================================
+  noDataBox: {
+    height: '100%',
+    width: '100%',
+    display: "grid",
+    placeContent: 'center'
+  },
+  //=================================
+  currentBalance: {
+    display: "flex",
+    flexDirection: "column",
+    flex: {
+      xs: 0,
+      md: 1
+    },
+    order: {
+      xs: 1,
+      md: 2
+    },
+    height: {
+      xs: "auto",
+      md: "fit-content"
+    }
+  },
+  //=================================
 }
 
 
@@ -50,22 +113,21 @@ const TransactionPage = (props) => {
   }, [])
 
   useEffect(() => {
-    if (transactionsData.length != 0) setFilteredData(setDataRange(range));
+    if (transactionsData.length === 0) return setFilteredData([])
+    if (transactionsData.length !== 0) return setFilteredData(setDataRange(range));
   }, [transactionsData, range])
+
 
   //Delete Handler 
   const handelDelete = (id) => {
     let newData = [];
     axios.delete(`transactions/${id}`)
-
-    
       .then(
         (response) => {
           if (response.status == 200) {
             newData = transactionsData.filter((item) => {
               return item.id != id
             })
-
           }
         }
       ).then(() => setTransactionsData(newData))
@@ -113,14 +175,14 @@ const TransactionPage = (props) => {
   //======filter data by selected time range
   const setDataRange = (range) => {
     let luxonDate = DateTime.fromISO(transactionsData[0].created_at)
+
     let dt = DateTime.now();
     let rangeStart = dt.startOf(range)
     let rangeEnd = dt.endOf(range)
 
-
     let filteredData = transactionsData.filter(x => {
       let itemTime = DateTime.fromISO(x.created_at)
-      return (itemTime > rangeStart && itemTime < rangeEnd)
+      return (itemTime >= rangeStart && itemTime <= rangeEnd)
     })
 
     return filteredData;
@@ -128,48 +190,54 @@ const TransactionPage = (props) => {
 
 
   return (
+
     <>
       <NavBar admin={localStorage.getItem('admin')} />
-      <Grid container maxWidth="xl" height="100vh">
-        <Grid item component={"aside"}>
+      <Grid sx={style.body} container height="100vh" overflow="hidden" >
+        <Grid xs={'auto'} height='100vh' item component={"aside"}>
           <SideBar />
         </Grid>
 
         <Grid
+          xs
+          sm
           item
           sx={style.main}
           component={"main"}
         >
           <Paper
             style={{ height: "calc(100vh - 84px)" }}
-            sx={{ p: '20px', overflowY: 'auto' }}
+            sx={style.paper}
             name="mainContainer"
           >
-            {isLoading ? <Typography>Loading...</Typography> :
+            {isLoading ?
+              <Box sx={style.noDataBox}>
+                <CircularProgress color="inherit" />
+              </Box>
+              :
               <Grid
                 overflow={"hidden"}
                 container
-                name="Grid"
-                gap={3}
+                name="subGrid"
                 height={"100%"}
-                sx={{ overflow: "auto", padding: "2px", flexWrap: "wrap-reverse", minHeight: "100%" }}
-                columnGap={2}
-              >
+                sx={style.subGrid}
+                columnGap={2}>
+
                 <Grid
                   item
                   xs={12}
-                  md={9}
+                  md={8}
+                  lg={9}
                   sx={style.list}
-                  name="transactions"
+                  name="transactions">
 
-                >
                   <TransactionsList
                     range={range} setRange={setRange}
                     categories={categories}
                     transactions={filteredData} delete={handelDelete} update={handelUpdate} />
-                </Grid>
 
-                <Grid md xs={12} item name="currentBalance">
+                </Grid>
+                <Grid md xs={12} sx={style.currentBalance} item name="currentBalance" >
                   <CurrentBalance transactions={filteredData} />
                   <Button variant="contained" sx={{ marginTop: '10px' }} onClick={() => setOpenAddDialog(true)} fullWidth>Add new Transaction</Button>
                 </Grid>

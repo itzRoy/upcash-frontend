@@ -172,15 +172,15 @@ const ReportsPage = (props) => {
 
 
 
-const style = {
-  main: {
-    mt: "74px",
-    mb: "10px",
-    mr: "10px",
-    minWidth: "100px",
-    flexGrow: 1
+  const style = {
+    main: {
+      mt: "74px",
+      mb: "10px",
+      mr: "10px",
+      minWidth: "100px",
+      flexGrow: 1
+    }
   }
-}
 
 
   return (
@@ -188,19 +188,19 @@ const style = {
     <>
       <NavBar admin={localStorage.getItem('admin')} />
       <Box display={"flex"} maxWidth="xl" height="100vh" container>
-        
-          <SideBar />
-        
+
+        <SideBar />
+
 
         <Box
-         
+
           sx={style.main}
           component={"main"}
         >
           <Paper
             style={{ height: "calc(100vh - 84px)" }}
-            
-            sx={{ overflowY: 'auto',  overflowX: 'hidden', maxWidth: "100%", padding: "20px" }}
+
+            sx={{ overflowY: 'auto', overflowX: 'hidden', maxWidth: "100%", padding: "20px" }}
             name="mainContainer">
 
             {/* localization time picker from mui */}
@@ -219,7 +219,7 @@ const style = {
                 renderInput={(startProps, endProps) => (
                   <Box width={"100%"} display={"flex"} justifyContent={"center"} alignItems={"center"}>
 
-                    <TextField {...startProps} sx={{px: 0}}/>
+                    <TextField {...startProps} sx={{ px: 0 }} />
                     <Box sx={{ px: 0, mx: 2, height: "0.5rem" }}> to </Box>
                     <TextField {...endProps} />
                     <Box sx={{ mx: 2, height: "0.5rem" }}> per </Box>
@@ -227,7 +227,7 @@ const style = {
                       <FormControl fullWidth sx={{ mr: 2, ml: 2 }}>
                         <InputLabel >Per</InputLabel>
                         <Select
-                        px={0}
+                          px={0}
                           id="demo-simple-select"
                           label="Per"
                           onChange={handleChange}
@@ -245,15 +245,15 @@ const style = {
                   </Box>
                 )}
               />
-              <Box container  mx={{xs:0,md:6}}>
-                <Box ml={{xs: 1, md: 8}} mr={{xs: 1, md: 8}}>
+              <Box container mx={{ xs: 0, md: 6 }}>
+                <Box ml={{ xs: 1, md: 8 }} mr={{ xs: 1, md: 8 }}>
                   <Line labels={labelsForLine} incomevalues={Values(labelsForLine, "income")} expensevalues={Values(labelsForLine, "expense")} />
                 </Box>
-                <Box flexGrow={1} mt={6} display={"flex"} justifyContent={{xs: "center", md: "space-around"}} flexDirection={{xs: "column", md: "row"}} >
-                  <Box maxWidth={{md: "50%"}} >
+                <Box flexGrow={1} mt={6} display={"flex"} justifyContent={{ xs: "center", md: "space-around" }} flexDirection={{ xs: "column", md: "row" }} >
+                  <Box maxWidth={{ md: "50%" }} >
                     <Pie colors1={colorsForIncome} labels={labelsForIncomePie} data={pieValues(labelsForIncomePie)} title={"income"} />
                   </Box>
-                  <Box maxWidth={{md: "50%"}} >
+                  <Box maxWidth={{ md: "50%" }} >
                     <Pie colors1={colorsForExpense} labels={labelsForExpensePie} data={pieValues(labelsForExpensePie)} title={"expense"} />
                   </Box>
                 </Box>
