@@ -20,7 +20,8 @@ const SX = {
   Box: {
     color: "white",
     height: "100vh",
-    maxWidth: "fit-content",
+    height: "calc(100vh - 84px)",
+    width: "auto",
     display: "flex",
     flexDirection: "column",
     alignItems: "center",
@@ -45,7 +46,7 @@ const SideBar = (props) => {
   };
 
   return (
-    <Box sx={SX.Box} style={{ height: "calc(100vh - 84px)" }}>
+    <Box sx={SX.Box}>
       <Button
         onClick={() => handelNavigation("transactions")}
         variant={"contained"}
