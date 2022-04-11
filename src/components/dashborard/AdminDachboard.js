@@ -1,8 +1,11 @@
 import React, { useState, useEffect, Fragment } from 'react';
 import axios from 'axios';
-import AdminDachboardReadonly from '../dashborard/adminDachboardReadonly';
-import AdminDachboardEdit from '../dashborard/AdminDachboardEdit';
-import { Table, TableCell, TableHead, TableRow, TextField, Button, Container, Stack, Paper } from '@mui/material';
+import DeleteOutlinedIcon from '@mui/icons-material/DeleteOutlined';
+import EditIcon from '@mui/icons-material/Edit';
+import ClearIcon from '@mui/icons-material/Clear';
+import SaveIcon from '@mui/icons-material/Save';
+import LockIcon from '@mui/icons-material/Lock';
+import { TextField, DialogTitle, Grid, Typography, CardActions, CardContent, DialogContent, DialogActions, Card, DialogContentText, Dialog, Button, Container, Stack, Paper } from '@mui/material';
 
 const AdminDachboard = (props) => {
 
@@ -14,6 +17,9 @@ const AdminDachboard = (props) => {
         Admins: [],
     });
 
+    const [open, setOpen] = useState(false);
+    const [openPass, setOpenPass] = useState(false);
+
     useEffect(() => {
         axios.get(`admin`)
             .then((res) => {
@@ -23,19 +29,32 @@ const AdminDachboard = (props) => {
             .catch((err) => console.log(err));
     }, []);
 
+    const handleClosePass = () => {
+        setOpenPass(false);
+    };
+
+    const handleClickOpenPass = () => {
+        setOpenPass(true);
+    };
+
+    const handleClickOpen = (event,user) => {
+        setOpen(true);
+        setAdminInfo({ ...AdminInfo, id: user.id})
+
+    };
+
+    const handleClose = () => {
+        setOpen(false);
+    };
+
     const handlechange = e => {
         setAdminInfo({ ...AdminInfo, [e.target.name]: e.target.value })
     }
 
-    const handleEditUser = (event, user) => {
+    const handleEditFlag = (event, user) => {
         event.preventDefault();
-        setAdminInfo({ ...AdminInfo, editContactId: user.id })
+        setAdminInfo({ ...AdminInfo, editContactId: user.id, username: user.username, password: user.password })
     }
-
-
-
-    
-
 
     const handleCancel = event => {
         event.preventDefault();
@@ -82,15 +101,19 @@ const AdminDachboard = (props) => {
                             console.log(index, newData)
                             setAdminInfo({ ...newData, editContactId: null })
                         }
-                        
+
                         console.log("newdata", newData);
+                        setOpenPass(false);
                     })
+
                 .catch((err) => console.log(err));
         }
         else { return "please enter all the field of data" }
     }
 
     const handledelete = (id) => {
+
+        setOpen(false);
         let newData = []
         axios.delete(`http://127.0.0.1:8000/api/admin/${id}`)
             .then(
@@ -113,7 +136,48 @@ const AdminDachboard = (props) => {
             marginBottom: '25px',
             color: 'white',
             justifyContent: "center"
-        }
+        },
+        saveButton: {
+            color: "black",
+            margin:'0 auto',
+            '&:hover': {
+                color: "green"
+            },
+        },
+        cancelButton: {
+            color: "black",
+            margin:'0 auto',
+            '&:hover': {
+                color: "red"
+            },
+        },
+        lockButton: {
+            color: "black",
+            margin:'0 auto',
+            '&:hover': {
+                color: "yellow"
+            },
+        },
+        deleteButton: {
+            color: "black",
+            margin:'0 auto',
+            '&:hover': {
+                color: "red"
+            },
+        },
+        EditButton: {
+            color: "black",
+            margin:'0 auto',
+            '&:hover': {
+                color: "blue"
+            },
+        },
+        card: {
+            color: "GREY",
+            maxWidth: 300,
+            backgroundColor: "#432554"
+        },
+     
     });
 
     return (
@@ -125,25 +189,80 @@ const AdminDachboard = (props) => {
                         <TextField id="outlined-basic" type='text' name='password' onChange={handlechange} label="password" variant="outlined" />
                         <Button type='button' onClick={handleAdd} variant="contained" disableElevation>ADD</Button>
                     </Stack>
+                    <Grid container spacing={2} direction="row" justify="flex-start" alignItems="flex-start">
+                        {AdminInfo.Admins.map((user) =>
+                            <>
+                            
+                                <Grid item xs={12} sm={6} md={3} >
+                                    <Card sx={style.card}>
+                                        <CardContent>
+                                            <Typography variant="h5">
+                                                ID : {user.id}
+                                            </Typography>
 
-                    <Table aria-label="simple table" >
-                        <TableHead >
-                            <TableRow>
-                                <TableCell>ID</TableCell>
-                                <TableCell >Username</TableCell>
-                                <TableCell >Password</TableCell>
-                                <TableCell >Action</TableCell>
-                            </TableRow>
-                        </TableHead>
+                                            {AdminInfo.editContactId === user.id ?
 
-                        {AdminInfo.Admins.map((user, index) =>
-                            <Fragment key={index}>
-                                {AdminInfo.editContactId === user.id ?
-                                    (<AdminDachboardEdit data={user} changeData={handlechange} cancel={handleCancel} save={handleEdit} />) :
-                                    (<AdminDachboardReadonly data={user} delete={handledelete} editclick={handleEditUser} />)}
-                            </Fragment>
+                                                <Typography variant="h5">
+                                                    Name :
+                                                    <TextField type='text'
+                                                        name='username'
+                                                        defaultValue={user.username}
+                                                        onChange={handlechange}
+                                                        required
+                                                    />
+                                                </Typography> :
+                                                <Typography variant="h5" >
+                                                    UserName : {user.username}
+                                                </Typography>
+                                            }
+                                        </CardContent>
+                                        <CardActions >
+                                            {AdminInfo.editContactId === user.id ?
+                                                <>
+                                                    <ClearIcon sx={style.cancelButton} onClick={handleCancel} />
+                                                    <SaveIcon sx={style.saveButton} onClick={handleEdit} />
+                                                    <LockIcon sx={style.lockButton} onClick={handleClickOpenPass} />
+                                                </> :
+                                                <>
+                                                    <DeleteOutlinedIcon sx={style.deleteButton} onClick={(event) => handleClickOpen(event, user)} />
+                                                    <EditIcon sx={style.EditButton} onClick={(event) => handleEditFlag(event, user)} />
+                                                </>}
+                                        </CardActions>
+                                    </Card>
+                                </Grid>
+
+                                <Dialog open={open} onClose={handleClose}>
+                                    <DialogContent>
+                                        <DialogContentText id="alert-dialog-description">
+                                            Are you sure you want to delete this Admin?
+                                        </DialogContentText>
+                                    </DialogContent>
+                                    <DialogActions>
+                                        <Button onClick={handleClose}>Disagree</Button>
+                                        <Button onClick={()=>handledelete(AdminInfo.id)} autoFocus>Agree</Button>
+                                    </DialogActions>
+                                </Dialog>
+
+                                <Dialog open={openPass} onClose={handleClosePass}>
+                                    <DialogTitle id="alert-dialog-title">
+                                        {"Enter your new password"}
+                                    </DialogTitle>
+                                    <DialogContent>
+                                        <TextField type='password'
+                                            name='password'
+                                            defaultValue={AdminInfo.password}
+                                            onChange={handlechange}
+                                            required
+                                        />
+                                    </DialogContent>
+                                    <DialogActions>
+                                        <Button onClick={handleClosePass}>Disagree</Button>
+                                        <Button onClick={handleEdit} autoFocus>Agree</Button>
+                                    </DialogActions>
+                                </Dialog>
+                            </>
                         )}
-                    </Table>
+                    </Grid>
                 </Paper>
             </Container>
         </div>

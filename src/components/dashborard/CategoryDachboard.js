@@ -1,8 +1,9 @@
 import React, { useState, useEffect, Fragment } from 'react';
 import axios from 'axios';
-import CategoryDachboardEdit from '../dashborard/CategoryDachboardEdit';
-import CategoryDachboardReadonly from '../dashborard/CategoryDachboardReadonly';
-import { Table, TableCell, Paper, TableHead, TableRow, TextField, Button, Container, Stack, RadioGroup, FormControlLabel, Radio } from '@mui/material';
+import EditIcon from '@mui/icons-material/Edit';
+import ClearIcon from '@mui/icons-material/Clear';
+import SaveIcon from '@mui/icons-material/Save';
+import { Paper, TextField, MenuItem, Select, Typography, Grid, CardContent, CardActions, Card, Button, Container, Stack, RadioGroup, FormControlLabel, Radio } from '@mui/material';
 
 const CatDachboard = (props) => {
 
@@ -57,23 +58,6 @@ const CatDachboard = (props) => {
             .catch((err) => console.log(err));
     }
 
-    const handledelete = (id) => {
-        let newData = []
-        axios.delete(`http://127.0.0.1:8000/api/categories/${id}`)
-            .then(
-                (response) => {
-                    if (response.status === 200) {
-                        newData = catInfo.categories.filter((item) => {
-                            return item.id !== id
-                        })
-                        console.log(newData);
-                    }
-                }
-            ).then(() => setcatInfo({ categories: newData }))
-
-            .catch((err) => console.log(err));
-    }
-
     const handleEdit = event => {
         let newData = { ...catInfo };
         event.preventDefault();
@@ -109,7 +93,33 @@ const CatDachboard = (props) => {
             marginBottom: '25px',
             color: 'white',
             justifyContent: "center"
-        }
+        },
+        card: {
+            color: "GREY",
+            maxWidth: 300,
+            backgroundColor: "#432554"
+        },
+        saveButton: {
+            color: "black",
+            margin: '0 auto',
+            '&:hover': {
+                color: "green"
+            },
+        },
+        EditButton: {
+            color: "black",
+            margin: '0 auto',
+            '&:hover': {
+                color: "blue"
+            },
+        },
+        cancelButton: {
+            color: "black",
+            margin: '0 auto',
+            '&:hover': {
+                color: "red"
+            },
+        },
     });
 
     return (
@@ -132,26 +142,61 @@ const CatDachboard = (props) => {
                         <Button type='button' onClick={handleAdd} variant="contained" disableElevation>ADD</Button>
                     </Stack>
 
-                    <Table aria-label="simple table" >
-                        <TableHead >
-                            <TableRow >
-                                        <TableCell>ID</TableCell>
-                                        <TableCell>Name</TableCell>
-                                        <TableCell>Type</TableCell>
-                                        <TableCell>Action</TableCell>
-                            </TableRow>
-                        </TableHead>
-
+                    <Grid container spacing={2} direction="row" justify="flex-start" alignItems="flex-start">
                         {catInfo.categories.map((cat, index) =>
+                            <>
+                                <Grid item xs={12} sm={6} md={3} >
+                                    <Card sx={style.card}>
+                                        <CardContent>
+                                            <Typography variant="h5">
+                                                Id : {cat.id}
+                                            </Typography>
 
-                            <Fragment key={index}>
-                                {catInfo.editContactId === cat.id ?
-                                    (<CategoryDachboardEdit data={cat} changeData={handlechange} cancel={handleCancel} save={handleEdit} />) :
-                                    (<CategoryDachboardReadonly data={cat} delete={handledelete} editclick={handleEditUser} />)}
-
-                            </Fragment>
+                                            {catInfo.editContactId === cat.id ?
+                                                <>
+                                                    <Typography variant="h5" >
+                                                        Name :
+                                                        <TextField
+                                                            type='text'
+                                                            name='name'
+                                                            defaultValue={cat.name}
+                                                            onChange={handlechange}
+                                                            required />
+                                                    </Typography>
+                                                    <Typography variant="h5">
+                                                        Type :
+                                                        <Select name="type" onChange={handlechange} defaultValue={cat.type}>
+                                                            <MenuItem value={'income'}>income</MenuItem>
+                                                            <MenuItem value={'expense'}>expense</MenuItem>
+                                                        </Select>
+                                                    </Typography>
+                                                </> :
+                                                <>
+                                                    <Typography variant="h5" >
+                                                        Name : {cat.name}
+                                                    </Typography>
+                                                    <Typography variant="h5">
+                                                        Type : {cat.type}
+                                                    </Typography>
+                                                </>
+                                            }
+                                        </CardContent>
+                                        <CardActions >
+                                            {catInfo.editContactId === cat.id ?
+                                                <>
+                                                    <ClearIcon sx={style.cancelButton} onClick={handleCancel} />
+                                                    <SaveIcon sx={style.saveButton} onClick={handleEdit} />
+                                                </> :
+                                                <>
+                                                    <EditIcon sx={style.EditButton} onClick={(event) => handleEditUser(event, cat)} />
+                                                </>}
+                                        </CardActions>
+                                    </Card>
+                                </Grid>
+                            </>
                         )}
-                    </Table>
+                    </Grid>
+
                 </Paper>
             </Container>
         </>
